@@ -7,7 +7,6 @@ import org.example.accountservice.mapper.AccountMapper;
 import org.example.accountservice.repository.AccountRepository;
 import org.example.accountservice.role.AccountRole;
 import org.example.accountservice.role.AccountStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,9 +19,7 @@ import java.util.UUID;
 public class AccountsServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
-
-    @Autowired
-    private AccountMapper mapper;
+    private final AccountMapper mapper;
 
     @Override
     public List<AccountDto> findAll() {
@@ -46,9 +43,11 @@ public class AccountsServiceImpl implements AccountService {
 
     @Override
     public ResponseEntity<?> editById(UUID id, AccountDto accountDto) {
+        Account newAccountData = mapper.toEntity(accountDto);
         Account account = accountRepository.findById(id).orElseThrow();
-        account.setEmail(account.getEmail());
-        account.setPassword(account.getPassword());
+        account.setUsername(newAccountData.getUsername());
+        account.setEmail(newAccountData.getEmail());
+        account.setPassword(newAccountData.getPassword());
         accountRepository.save(account);
         return new ResponseEntity<>(mapper.toDto(account), HttpStatus.OK);
         }
