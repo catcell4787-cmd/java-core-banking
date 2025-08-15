@@ -1,0 +1,16 @@
+server:
+  port: 8080
+spring:
+  main:
+    banner-mode: off
+  application:
+    name: account-service
+  datasource:
+    url: jdbc:postgresql://192.168.50.210:5432/accdb
+    username: accdb
+    password: accdb
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: update
+
