@@ -26,9 +26,13 @@ public class AccountsServiceImpl implements AccountService {
 
     @Override
     public ResponseEntity<?> findById(UUID id) {
-        Account account = accountRepository.findById(id).orElseThrow();
-        return new ResponseEntity<>(account, HttpStatus.OK);
+        if (accountRepository.existsById(id)) {
+            return ResponseEntity.ok(accountRepository.findById(id));
+        } else {
+            throw new GlobalExceptionHandler.ResourceNotFoundException("Account with id " + id + " not found");
+        }
     }
+
 
     @Override
     public ResponseEntity<?> registerAccount(Account account) {
@@ -58,7 +62,7 @@ public class AccountsServiceImpl implements AccountService {
         account.setPassword(newData.getPassword());
         accountRepository.save(account);
         return new ResponseEntity<>(account, HttpStatus.OK);
-        }
+    }
 
     @Override
     public ResponseEntity<?> deleteById(UUID id) {

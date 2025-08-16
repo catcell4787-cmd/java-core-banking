@@ -23,6 +23,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorData, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorData> handleConflictException(ResourceNotFoundException ex, HttpServletRequest request) {
+        ErrorData errorData = new ErrorData(HttpStatus.NOT_FOUND.value(), ex.getMessage(), request.getRequestURI());
+        return new ResponseEntity<>(errorData, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorData> handleBadRequestException(MethodArgumentNotValidException ex, HttpServletRequest request) {
         ErrorData errorData = new ErrorData(HttpStatus.BAD_REQUEST.value(), "Validation error", request.getRequestURI());
@@ -70,6 +76,12 @@ public class GlobalExceptionHandler {
 
     public static class ConflictException extends RuntimeException {
         public ConflictException(String message) {
+            super(message);
+        }
+    }
+
+    public static class ResourceNotFoundException extends RuntimeException {
+        public ResourceNotFoundException(String message) {
             super(message);
         }
     }
