@@ -2,7 +2,7 @@ package org.example.accountservice.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.accountservice.dto.AccountDto;
+import org.example.accountservice.entity.Account;
 import org.example.accountservice.service.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,7 @@ class AccountController {
     private final AccountService accountService;
 
     @GetMapping("/all")
-    public List<AccountDto> findAll() {
+    public List<Account> findAll() {
         return accountService.findAll();
     }
 
@@ -27,12 +27,12 @@ class AccountController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerAccount(@Valid @RequestBody AccountDto accountDto) {
+    public ResponseEntity<?> registerAccount(@Valid @RequestBody Account accountDto) {
         return accountService.registerAccount(accountDto);
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<?> updateAccount(@Valid @PathVariable UUID id, @RequestBody AccountDto accountDto) {
+    public ResponseEntity<?> updateAccount(@Valid @PathVariable UUID id, @RequestBody Account accountDto) {
         return accountService.editById(id, accountDto);
     }
 
