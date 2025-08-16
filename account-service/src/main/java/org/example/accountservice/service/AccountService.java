@@ -8,8 +8,8 @@ import java.util.UUID;
 public interface AccountService {
     List<Account> findAll();
     ResponseEntity<?> findById(UUID id);
-    ResponseEntity<?> registerAccount(Account accountDto);
-    ResponseEntity<?> editById(UUID id, Account accountDto);
+    ResponseEntity<?> registerAccount(Account account);
+    ResponseEntity<?> editById(UUID id, Account account);
     ResponseEntity<?> deleteById(UUID id);
     ResponseEntity<?> deleteAllAccounts();
 }

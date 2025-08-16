@@ -27,13 +27,13 @@ class AccountController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerAccount(@Valid @RequestBody Account accountDto) {
-        return accountService.registerAccount(accountDto);
+    public ResponseEntity<?> registerAccount(@Valid @RequestBody Account account) {
+        return accountService.registerAccount(account);
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<?> updateAccount(@Valid @PathVariable UUID id, @RequestBody Account accountDto) {
-        return accountService.editById(id, accountDto);
+    public ResponseEntity<?> updateAccount(@Valid @PathVariable UUID id, @RequestBody Account account) {
+        return accountService.editById(id, account);
     }
 
     @DeleteMapping("/delete/{id}")
