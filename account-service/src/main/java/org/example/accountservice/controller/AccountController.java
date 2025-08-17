@@ -32,7 +32,7 @@ class AccountController {
     }
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<?> updateAccount(@Valid @PathVariable UUID id, @RequestBody Account account) {
+    public ResponseEntity<?> updateAccount(@PathVariable UUID id, @Valid @RequestBody Account account) {
         return accountService.editById(id, account);
     }
 

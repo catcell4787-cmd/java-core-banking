@@ -6,7 +6,7 @@ spring:
   application:
     name: account-service
   datasource:
-    url: jdbc:postgresql://192.168.50.69:5432/acc
+    url: jdbc:postgresql://192.168.50.210:5432/accdb
     username: acc
     password: acc
   jpa:

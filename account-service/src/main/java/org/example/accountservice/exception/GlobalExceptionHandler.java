@@ -1,4 +1,4 @@
-package org.example.accountservice.handler;
+package org.example.accountservice.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -38,7 +38,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorData, HttpStatus.BAD_REQUEST);
     }
 
-
     @Data
     public static class ErrorData {
 
@@ -61,7 +60,7 @@ public class GlobalExceptionHandler {
 
         public void addValidationError(String field, String message) {
             if (this.validationErrors == null) {
-                validationErrors = new ArrayList<>();
+                this.validationErrors = new ArrayList<>();
             }
             validationErrors.add(new ValidationError(field, message));
         }

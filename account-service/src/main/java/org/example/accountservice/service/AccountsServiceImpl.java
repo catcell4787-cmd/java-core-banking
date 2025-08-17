@@ -2,7 +2,7 @@ package org.example.accountservice.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.accountservice.entity.Account;
-import org.example.accountservice.handler.GlobalExceptionHandler;
+import org.example.accountservice.exception.GlobalExceptionHandler;
 import org.example.accountservice.repository.AccountRepository;
 import org.example.accountservice.role.AccountRole;
 import org.example.accountservice.role.AccountStatus;

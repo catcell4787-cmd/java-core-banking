@@ -2,6 +2,7 @@ package org.example.accountservice.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.example.accountservice.role.AccountRole;
@@ -20,15 +21,16 @@ public class Account {
     private UUID id;
 
     @Column(name = "username")
-    @Size(message = "Username size must be between 3 and 10", min = 3, max = 10)
+    @Size(min = 3, max = 16, message = "Username size must be between 3 and 16 symbols")
     private String username;
 
     @Column(name = "password")
-    @Size(message = "Password size must be between 3 and 10", min = 3, max = 10)
+    @Size(min = 3, max = 16, message = "Password size must be between 3 and 16 symbols")
     private String password;
 
     @Column(name = "email")
     @Email(message = "Email syntax is not correct")
+    @NotBlank(message = "Enter your email")
     private String email;
 
     @Column(name = "acc_role")
