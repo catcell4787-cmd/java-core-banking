@@ -1,5 +1,6 @@
 package org.example.accountservice.exception;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +10,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +48,37 @@ public class GlobalExceptionHandler {
             errorData.addValidationError(fieldError.getField(), fieldError.getDefaultMessage());
         }
         return new ResponseEntity<>(errorData, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorData> handleAuthenticationException(AuthenticationException ex, HttpServletRequest request) {
+        ErrorData errorData = new ErrorData(
+                HttpStatus.FORBIDDEN.value(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(errorData, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<ErrorData> handleExpiredJwtException(ExpiredJwtException ex, HttpServletRequest request) {
+        ErrorData errorData = new ErrorData(
+                HttpStatus.FORBIDDEN.value(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(errorData, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ErrorData> handleGenericException(Exception ex, HttpServletRequest request) {
+        ErrorData errorData = new ErrorData(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                ex.getMessage(),
+                request.getRequestURI());
+        return new ResponseEntity<>(errorData, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Data
