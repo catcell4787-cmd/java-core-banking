@@ -39,9 +39,6 @@ public class AccountsServiceImpl implements AccountService {
         if (accountRepository.existsByEmail(account.getEmail())) {
             throw new GlobalExceptionHandler.ConflictException("Email already exists");
         }
-        if (accountRepository.existsByUsername(account.getUsername())) {
-            throw new GlobalExceptionHandler.ConflictException("Username already exists");
-        }
         account.setAccountStatus(AccountStatus.PENDING);
         account.setAccountRole(AccountRole.CLIENT);
         accountRepository.save(account);
@@ -54,10 +51,8 @@ public class AccountsServiceImpl implements AccountService {
         if (accountRepository.existsByEmail(newData.getEmail()) && !account.getEmail().equals(newData.getEmail())) {
             throw new GlobalExceptionHandler.ConflictException("Email already exists");
         }
-        if (accountRepository.existsByUsername(newData.getUsername()) && !account.getUsername().equals(newData.getUsername())) {
-            throw new GlobalExceptionHandler.ConflictException("Username already exists");
-        }
-        account.setUsername(newData.getUsername());
+        account.setFirstname(newData.getFirstname());
+        account.setLastname(newData.getLastname());
         account.setEmail(newData.getEmail());
         account.setPassword(newData.getPassword());
         accountRepository.save(account);
@@ -67,7 +62,7 @@ public class AccountsServiceImpl implements AccountService {
     @Override
     public ResponseEntity<?> deleteById(UUID id) {
         accountRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("User with id " + id + " deleted", HttpStatus.NO_CONTENT);
     }
 
     @Override

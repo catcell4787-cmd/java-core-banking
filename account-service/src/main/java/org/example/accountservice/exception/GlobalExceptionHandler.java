@@ -19,19 +19,28 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ErrorData> handleConflictException(ConflictException ex, HttpServletRequest request) {
-        ErrorData errorData = new ErrorData(HttpStatus.CONFLICT.value(), ex.getMessage(), request.getRequestURI());
+        ErrorData errorData = new ErrorData(
+                HttpStatus.CONFLICT.value(),
+                ex.getMessage(),
+                request.getRequestURI());
         return new ResponseEntity<>(errorData, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorData> handleConflictException(ResourceNotFoundException ex, HttpServletRequest request) {
-        ErrorData errorData = new ErrorData(HttpStatus.NOT_FOUND.value(), ex.getMessage(), request.getRequestURI());
+        ErrorData errorData = new ErrorData(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                request.getRequestURI());
         return new ResponseEntity<>(errorData, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorData> handleBadRequestException(MethodArgumentNotValidException ex, HttpServletRequest request) {
-        ErrorData errorData = new ErrorData(HttpStatus.BAD_REQUEST.value(), "Validation error", request.getRequestURI());
+        ErrorData errorData = new ErrorData(
+                HttpStatus.BAD_REQUEST.value(),
+                "Validation error",
+                request.getRequestURI());
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             errorData.addValidationError(fieldError.getField(), fieldError.getDefaultMessage());
         }

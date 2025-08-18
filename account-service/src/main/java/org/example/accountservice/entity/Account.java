@@ -18,11 +18,16 @@ import java.util.UUID;
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
     private UUID id;
 
-    @Column(name = "username")
-    @Size(min = 3, max = 16, message = "Username size must be between 3 and 16 symbols")
-    private String username;
+    @Column(name = "firstname")
+    @Size(min = 2, max = 16, message = "Firstname size must be between 2 and 16 symbols")
+    private String firstname;
+
+    @Column(name = "lastname")
+    @Size(min = 2, max = 16, message = "Lastname size must be between 2 and 16 symbols")
+    private String lastname;
 
     @Column(name = "password")
     @Size(min = 3, max = 16, message = "Password size must be between 3 and 16 symbols")
@@ -33,15 +38,15 @@ public class Account {
     @NotBlank(message = "Enter your email")
     private String email;
 
-    @Column(name = "acc_role")
+    @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private AccountRole accountRole;
 
-    @Column(name = "acc_status")
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private AccountStatus accountStatus;
 
-    @Column(name = "acc_reg_date")
+    @Column(name = "reg_date")
     @CreationTimestamp
     private LocalDateTime accRegDate;
 

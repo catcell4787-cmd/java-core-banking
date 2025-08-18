@@ -9,5 +9,4 @@ public interface AccountRepository extends JpaRepository<Account, UUID> {
 
     boolean existsByEmail(String email);
 
-    boolean existsByUsername(String username);
 }
