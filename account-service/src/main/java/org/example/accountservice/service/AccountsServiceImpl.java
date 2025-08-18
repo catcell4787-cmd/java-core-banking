@@ -32,7 +32,7 @@ public class AccountsServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public AuthTokenDto signIn(AccountCredentialsDto accountCredentialsDto) throws AuthenticationException {
+    public AuthTokenDto signIn(AccountCredentialsDto accountCredentialsDto)  {
         Account account = findByCredentials(accountCredentialsDto);
         return jwtService.generateAuthToken(account.getEmail());
     }
@@ -86,14 +86,16 @@ public class AccountsServiceImpl implements AccountService {
         return new ResponseEntity<>("Accounts dropped", HttpStatus.OK);
     }
 
-    private Account findByCredentials(AccountCredentialsDto accountCredentialsDto) throws AuthenticationException {
+    private Account findByCredentials(AccountCredentialsDto accountCredentialsDto) {
         Optional<Account> optionalAccount = accountRepository.findByEmail(accountCredentialsDto.getEmail());
         if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
             if (passwordEncoder.matches(accountCredentialsDto.getPassword(), account.getPassword())) {
                 return account;
             }
+        } else {
+            throw new GlobalExceptionHandler.AuthenticationException("Invalid email");
         }
-        throw new AuthenticationException("Email or password is not correct");
+        throw new GlobalExceptionHandler.AuthenticationException("Invalid password");
     }
 }
