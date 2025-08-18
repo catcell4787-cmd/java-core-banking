@@ -1,11 +1,13 @@
 package org.example.accountservice.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.accountservice.dto.AccountDto;
 import org.example.accountservice.entity.Account;
 import org.example.accountservice.exception.GlobalExceptionHandler;
 import org.example.accountservice.repository.AccountRepository;
 import org.example.accountservice.role.AccountRole;
 import org.example.accountservice.role.AccountStatus;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,10 +20,12 @@ import java.util.UUID;
 public class AccountsServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
+    private final ModelMapper modelMapper;
 
     @Override
-    public List<Account> findAll() {
-        return accountRepository.findAll();
+    public List<AccountDto> findAll() {
+        return accountRepository.findAll().stream().map(account -> modelMapper.map(account, AccountDto.class))
+                .toList();
     }
 
     @Override
@@ -33,38 +37,27 @@ public class AccountsServiceImpl implements AccountService {
         }
     }
 
+    @Override
+    public ResponseEntity<?> findByEmail(String email) {
+        AccountDto user = modelMapper.map(accountRepository.findByEmail(email), AccountDto.class);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            throw new GlobalExceptionHandler.ResourceNotFoundException("Account with email " + email + " not found");
+        }
+    }
 
     @Override
-    public ResponseEntity<?> registerAccount(Account account) {
-        if (accountRepository.existsByEmail(account.getEmail())) {
+    public ResponseEntity<?> registerAccount(AccountDto accountDto) {
+        Account newAccount = modelMapper.map(accountDto, Account.class);
+        if (accountRepository.existsByEmail(newAccount.getEmail())) {
             throw new GlobalExceptionHandler.ConflictException("Email already exists");
         }
-        account.setAccountStatus(AccountStatus.PENDING);
-        account.setAccountRole(AccountRole.CLIENT);
-        accountRepository.save(account);
-        return new ResponseEntity<>(account, HttpStatus.CREATED);
+        newAccount.setAccountStatus(AccountStatus.PENDING);
+        newAccount.setAccountRole(AccountRole.CLIENT);
+        accountRepository.save(newAccount);
+        return new ResponseEntity<>(newAccount, HttpStatus.CREATED);
     }
-
-    @Override
-    public ResponseEntity<?> editById(UUID id, Account newData) {
-        Account account = accountRepository.findById(id).orElseThrow();
-        if (accountRepository.existsByEmail(newData.getEmail()) && !account.getEmail().equals(newData.getEmail())) {
-            throw new GlobalExceptionHandler.ConflictException("Email already exists");
-        }
-        account.setFirstname(newData.getFirstname());
-        account.setLastname(newData.getLastname());
-        account.setEmail(newData.getEmail());
-        account.setPassword(newData.getPassword());
-        accountRepository.save(account);
-        return new ResponseEntity<>(account, HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<?> deleteById(UUID id) {
-        accountRepository.deleteById(id);
-        return new ResponseEntity<>("User with id " + id + " deleted", HttpStatus.NO_CONTENT);
-    }
-
     @Override
     public ResponseEntity<?> deleteAllAccounts() {
         accountRepository.deleteAll();

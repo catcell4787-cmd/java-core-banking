@@ -18,7 +18,7 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<ErrorData> handleConflictException(ConflictException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorData> handleResourceNotFoundException(ConflictException ex, HttpServletRequest request) {
         ErrorData errorData = new ErrorData(
                 HttpStatus.CONFLICT.value(),
                 ex.getMessage(),
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorData> handleConflictException(ResourceNotFoundException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorData> handleResourceNotFoundException(ResourceNotFoundException ex, HttpServletRequest request) {
         ErrorData errorData = new ErrorData(
                 HttpStatus.NOT_FOUND.value(),
                 ex.getMessage(),
