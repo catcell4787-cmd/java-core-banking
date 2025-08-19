@@ -7,6 +7,7 @@ import org.example.accountservice.dto.AccountDto;
 import org.example.accountservice.dto.AuthTokenDto;
 import org.example.accountservice.dto.RefreshTokenDto;
 import org.example.accountservice.role.AccountRole;
+import org.example.accountservice.role.AccountStatus;
 import org.example.accountservice.service.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +34,8 @@ class AccountController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerAccount(@Valid @RequestBody AccountDto account) {
-        return accountService.registerAccount(account, AccountRole.CLIENT);
+    public AccountDto registerAccount(@Valid @RequestBody AccountDto account) {
+        return accountService.signUp(account, AccountRole.CLIENT, AccountStatus.PENDING);
     }
 
     @PostMapping("/signin")

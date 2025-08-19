@@ -3,6 +3,8 @@ package org.example.accountservice.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -18,12 +20,15 @@ import java.util.List;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    Logger logger = LogManager.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ErrorData> handleResourceNotFoundException(ConflictException ex, HttpServletRequest request) {
         ErrorData errorData = new ErrorData(
                 HttpStatus.CONFLICT.value(),
                 ex.getMessage(),
                 request.getRequestURI());
+        logger.error(errorData.toString());
         return new ResponseEntity<>(errorData, HttpStatus.CONFLICT);
     }
 
@@ -33,6 +38,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND.value(),
                 ex.getMessage(),
                 request.getRequestURI());
+        logger.error(errorData.toString());
         return new ResponseEntity<>(errorData, HttpStatus.NOT_FOUND);
     }
 
@@ -45,6 +51,7 @@ public class GlobalExceptionHandler {
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             errorData.addValidationError(fieldError.getField(), fieldError.getDefaultMessage());
         }
+        logger.error(errorData.toString());
         return new ResponseEntity<>(errorData, HttpStatus.BAD_REQUEST);
     }
 
@@ -55,6 +62,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 ex.getMessage(),
                 request.getRequestURI());
+        logger.error(errorData.toString());
         return new ResponseEntity<>(errorData, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -66,6 +74,7 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 request.getRequestURI()
         );
+        logger.error(errorData.toString());
         return new ResponseEntity<>(errorData, HttpStatus.UNAUTHORIZED);
     }
 

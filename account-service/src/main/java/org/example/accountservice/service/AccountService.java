@@ -5,6 +5,7 @@ import org.example.accountservice.dto.AccountDto;
 import org.example.accountservice.dto.AuthTokenDto;
 import org.example.accountservice.dto.RefreshTokenDto;
 import org.example.accountservice.role.AccountRole;
+import org.example.accountservice.role.AccountStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.naming.AuthenticationException;
@@ -19,7 +20,7 @@ public interface AccountService {
 
     AccountDto findByEmail(String email);
 
-    ResponseEntity<?> registerAccount(AccountDto account, AccountRole role);
+    AccountDto signUp(AccountDto account, AccountRole role, AccountStatus status);
 
     ResponseEntity<?> deleteAllAccounts();
 }

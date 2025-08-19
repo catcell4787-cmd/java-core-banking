@@ -63,7 +63,7 @@ public class AccountsServiceImpl implements AccountService {
     }
 
     @Override
-    public ResponseEntity<?> registerAccount(AccountDto accountDto, AccountRole role) {
+    public AccountDto signUp(AccountDto accountDto, AccountRole role, AccountStatus status) {
         Account newAccount = modelMapper.map(accountDto, Account.class);
         if (accountRepository.existsByEmail(newAccount.getEmail())) {
             throw new GlobalExceptionHandler.ConflictException("Email already exists");
@@ -71,8 +71,10 @@ public class AccountsServiceImpl implements AccountService {
         newAccount.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         newAccount.setStatus(AccountStatus.PENDING);
         newAccount.setRole(role);
+        newAccount.setStatus(status);
         accountRepository.save(newAccount);
-        return new ResponseEntity<>(newAccount, HttpStatus.CREATED);
+        accountDto = modelMapper.map(newAccount, AccountDto.class);
+        return accountDto;
     }
 
 
