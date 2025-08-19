@@ -1,5 +1,6 @@
 package org.example.accountservice.service;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.example.accountservice.dto.AccountCredentialsDto;
 import org.example.accountservice.dto.AccountDto;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Service;
 import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -54,32 +54,25 @@ public class AccountsServiceImpl implements AccountService {
     }
 
     @Override
-    public ResponseEntity<?> findById(UUID id) {
-        if (accountRepository.existsById(id)) {
-            return ResponseEntity.ok(accountRepository.findById(id));
-        } else {
-            throw new GlobalExceptionHandler.ResourceNotFoundException("Account with id " + id + " not found");
-        }
-    }
-
-    @Override
     public Account findByEmail(String email) {
         return accountRepository.findByEmail(email).orElseThrow(()
                 -> new GlobalExceptionHandler.ResourceNotFoundException("Account with email " + email + " not found"));
     }
 
     @Override
-    public ResponseEntity<?> registerAccount(AccountDto accountDto) {
+    public ResponseEntity<?> registerAccount(AccountDto accountDto, AccountRole role) {
         Account newAccount = modelMapper.map(accountDto, Account.class);
         if (accountRepository.existsByEmail(newAccount.getEmail())) {
             throw new GlobalExceptionHandler.ConflictException("Email already exists");
         }
         newAccount.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         newAccount.setStatus(AccountStatus.PENDING);
-        newAccount.setRole(AccountRole.CLIENT);
+        newAccount.setRole(role);
         accountRepository.save(newAccount);
         return new ResponseEntity<>(newAccount, HttpStatus.CREATED);
     }
+
+
     @Override
     public ResponseEntity<?> deleteAllAccounts() {
         accountRepository.deleteAll();
@@ -92,10 +85,25 @@ public class AccountsServiceImpl implements AccountService {
             Account account = optionalAccount.get();
             if (passwordEncoder.matches(accountCredentialsDto.getPassword(), account.getPassword())) {
                 return account;
+            } else {
+                throw new GlobalExceptionHandler.AuthenticationException("Invalid password");
             }
-        } else {
-            throw new GlobalExceptionHandler.AuthenticationException("Invalid email");
         }
-        throw new GlobalExceptionHandler.AuthenticationException("Invalid password");
+        throw new GlobalExceptionHandler.AuthenticationException("Invalid email");
+    }
+
+    @PostConstruct
+    public void createAdmin() {
+        String admin = "admin";
+        if (!accountRepository.existsByEmail("admin@admin.com")) {
+            Account account = new Account();
+            account.setRole(AccountRole.ADMIN);
+            account.setFirstname(admin);
+            account.setLastname(admin);
+            account.setEmail("admin@admin.com");
+            account.setPassword(passwordEncoder.encode(admin));
+            account.setStatus(AccountStatus.ACTIVE);
+            accountRepository.save(account);
+        }
     }
 }
