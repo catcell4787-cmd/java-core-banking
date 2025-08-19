@@ -48,7 +48,7 @@ public class SecurityConfig {
                         auth ->
                                 auth
                 .requestMatchers("/accounts/register", "/accounts/login").permitAll()
-                .requestMatchers("/managers/register", "/managers/all").hasAuthority("ADMIN")
+                .requestMatchers("/managers/register", "/managers/all", "/managers/clients/**").hasAuthority("ADMIN")
                 .requestMatchers("/accounts/edit/**", "/accounts/updateStatus/**").hasAuthority("MANAGER")
                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

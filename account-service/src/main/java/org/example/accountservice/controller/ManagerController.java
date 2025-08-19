@@ -23,15 +23,23 @@ public class ManagerController {
         return accountService.findAllByRole(AccountRole.MANAGER);
     }
 
-    @GetMapping("/clients/list")
+    @GetMapping("/clients/all")
+    public List<AccountDto> getAllClients() {
+        return accountService.findAllByRole(AccountRole.CLIENT);
+    }
 
     @PostMapping("/register")
-    public ResponseEntity<?> addAccount(@RequestBody @Valid AccountDto accountDto) {
+    public ResponseEntity<?> addManager(@RequestBody @Valid AccountDto accountDto) {
         return accountService.register(accountDto, AccountRole.MANAGER, AccountStatus.ACTIVE);
     }
 
     @PatchMapping("/updateStatus/{email}")
     public ResponseEntity<?> updateAccountStatus(@PathVariable String email, @RequestBody AccountDto accountDto, AccountStatus status) {
         return accountService.updateStatus(email, accountDto, status);
+    }
+
+    @PutMapping("/edit/{email}")
+    public ResponseEntity<?> editAccount(@PathVariable String email, @RequestBody AccountDto accountDto) {
+        return accountService.edit(email, accountDto);
     }
 }
