@@ -46,10 +46,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         // Настройка доступа к конечным точкам
                         auth ->
-                                auth.requestMatchers("/accounts/**").permitAll()
+                                auth
+                                        .requestMatchers("/accounts/**").permitAll()
                                         .requestMatchers("/managers/signup").hasAuthority("ADMIN")
-                                        .anyRequest().authenticated()
-                )
+                                        .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

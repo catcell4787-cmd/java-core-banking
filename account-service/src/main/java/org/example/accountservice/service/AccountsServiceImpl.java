@@ -32,17 +32,16 @@ public class AccountsServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public Account signUp(Account account, AccountRole role, AccountStatus status) {
-        if (accountRepository.existsByEmail(account.getEmail())) {
+    public ResponseEntity<?> signUp(AccountDto accountDto, AccountRole role, AccountStatus status) {
+        if (accountRepository.existsByEmail(accountDto.getEmail())) {
             throw new GlobalExceptionHandler.ConflictException("Email already exists");
         }
-        Account newAccount = new  Account();
-        newAccount.setPassword(passwordEncoder.encode(account.getPassword()));
-        newAccount.setStatus(AccountStatus.PENDING);
-        newAccount.setRole(role);
-        newAccount.setStatus(status);
-        accountRepository.save(newAccount);
-        return newAccount;
+        Account account = modelMapper.map(accountDto, Account.class);
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        account.setStatus(status);
+        account.setRole(role);
+        accountRepository.save(account);
+        return ResponseEntity.ok(account);
     }
 
     @Override
