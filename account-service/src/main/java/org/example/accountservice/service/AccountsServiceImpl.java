@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.naming.AuthenticationException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,6 +72,17 @@ public class AccountsServiceImpl implements AccountService {
     public List<AccountDto> findAll() {
         return accountRepository.findAll().stream().map(account -> modelMapper.map(account, AccountDto.class))
                 .toList();
+    }
+
+    @Override
+    public List<AccountDto> findAllByRole(AccountRole accountRole) {
+        List<AccountDto> listByRoles = new ArrayList<>();
+        List<Account> accountDtos = accountRepository.findAll();
+        for (Account account : accountDtos) {
+            if (account.getRole().equals(accountRole))
+                listByRoles.add(modelMapper.map(account, AccountDto.class));
+        }
+        return listByRoles;
     }
 
     @Override

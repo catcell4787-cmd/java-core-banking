@@ -18,6 +18,8 @@ public interface AccountService {
 
     List<AccountDto> findAll();
 
+    List<AccountDto> findAllByRole(AccountRole accountRole);
+
     AccountDto findByEmail(String email);
 
     ResponseEntity<?> register(AccountDto accountDto, AccountRole role, AccountStatus status);

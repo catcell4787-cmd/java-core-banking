@@ -9,12 +9,21 @@ import org.example.accountservice.service.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/managers")
 public class ManagerController {
     private final AccountService accountService;
+
+    @GetMapping("/all")
+    public List<AccountDto> getAllManagers() {
+        return accountService.findAllByRole(AccountRole.MANAGER);
+    }
+
+    @GetMapping("/clients/list")
 
     @PostMapping("/register")
     public ResponseEntity<?> addAccount(@RequestBody @Valid AccountDto accountDto) {
