@@ -22,5 +22,7 @@ public interface AccountService {
 
     ResponseEntity<?> signUp(AccountDto accountDto, AccountRole role, AccountStatus status);
 
+    ResponseEntity<?> editAccount(String email, AccountDto accountDto);
+
     ResponseEntity<?> deleteAllAccounts();
 }

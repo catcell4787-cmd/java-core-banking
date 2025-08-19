@@ -48,6 +48,11 @@ class AccountController {
         }
     }
 
+    @PutMapping("/edit/{email}")
+    public ResponseEntity<?> editAccount(@PathVariable String email, @Valid @RequestBody AccountDto accountDto) {
+        return accountService.editAccount(email, accountDto);
+    }
+
     @PostMapping("/refresh")
     public AuthTokenDto refreshToken(@RequestBody RefreshTokenDto refreshTokenDto) throws Exception {
         return accountService.refreshToken(refreshTokenDto);

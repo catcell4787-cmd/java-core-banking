@@ -51,6 +51,23 @@ public class AccountsServiceImpl implements AccountService {
     }
 
     @Override
+    public ResponseEntity<?> editAccount(String email, AccountDto accountDto) {
+        Account account = accountRepository.findByEmail(email).orElseThrow(
+                () -> new GlobalExceptionHandler.ResourceNotFoundException("Email not found")
+        );
+        if (accountRepository.existsByEmail(account.getEmail()) && !account.getEmail().equals(accountDto.getEmail())) {
+            throw new GlobalExceptionHandler.ConflictException("Email already exists");
+        }
+        account.setPassword(passwordEncoder.encode(accountDto.getPassword()));
+        account.setFirstname(accountDto.getFirstname());
+        account.setLastname(accountDto.getLastname());
+        account.setStatus(accountDto.getStatus());
+        account.setEmail(accountDto.getEmail());
+        accountRepository.save(account);
+        return ResponseEntity.ok(account);
+    }
+
+    @Override
     public List<AccountDto> findAll() {
         return accountRepository.findAll().stream().map(account -> modelMapper.map(account, AccountDto.class))
                 .toList();
