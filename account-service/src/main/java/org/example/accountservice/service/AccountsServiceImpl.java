@@ -32,7 +32,7 @@ public class AccountsServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public ResponseEntity<?> signUp(AccountDto accountDto, AccountRole role, AccountStatus status) {
+    public ResponseEntity<?> register(AccountDto accountDto, AccountRole role, AccountStatus status) {
         if (accountRepository.existsByEmail(accountDto.getEmail())) {
             throw new GlobalExceptionHandler.ConflictException("Email already exists");
         }
@@ -45,13 +45,13 @@ public class AccountsServiceImpl implements AccountService {
     }
 
     @Override
-    public AuthTokenDto signIn(AccountCredentialsDto accountCredentialsDto)  {
+    public AuthTokenDto login(AccountCredentialsDto accountCredentialsDto)  {
         Account account = findByCredentials(accountCredentialsDto);
         return jwtService.generateAuthToken(account.getEmail());
     }
 
     @Override
-    public ResponseEntity<?> editAccount(String email, AccountDto accountDto) {
+    public ResponseEntity<?> edit(String email, AccountDto accountDto) {
         Account account = accountRepository.findByEmail(email).orElseThrow(
                 () -> new GlobalExceptionHandler.ResourceNotFoundException("Email not found")
         );
@@ -90,6 +90,15 @@ public class AccountsServiceImpl implements AccountService {
             return jwtService.refreshBaseToken(account.getEmail(), refreshToken);
         }
         throw new AuthenticationException("Invalid refresh token");
+    }
+
+    @Override
+    public ResponseEntity<?> updateStatus(String email, AccountDto accountDto, AccountStatus status) {
+        Account account = accountRepository.findByEmail(email).orElseThrow(
+                () -> new GlobalExceptionHandler.ResourceNotFoundException("Account with email " + email + " not found")
+        );
+        account.setStatus(accountDto.getStatus());
+        return ResponseEntity.ok(accountRepository.save(account));
     }
 
     @Override

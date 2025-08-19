@@ -12,7 +12,7 @@ import javax.naming.AuthenticationException;
 import java.util.List;
 
 public interface AccountService {
-    AuthTokenDto signIn(AccountCredentialsDto accountCredentialsDto) throws AuthenticationException;
+    AuthTokenDto login(AccountCredentialsDto accountCredentialsDto) throws AuthenticationException;
 
     AuthTokenDto refreshToken(RefreshTokenDto refreshTokenDto) throws Exception;
 
@@ -20,9 +20,11 @@ public interface AccountService {
 
     AccountDto findByEmail(String email);
 
-    ResponseEntity<?> signUp(AccountDto accountDto, AccountRole role, AccountStatus status);
+    ResponseEntity<?> register(AccountDto accountDto, AccountRole role, AccountStatus status);
 
-    ResponseEntity<?> editAccount(String email, AccountDto accountDto);
+    ResponseEntity<?> edit(String email, AccountDto accountDto);
+
+    ResponseEntity<?> updateStatus(String email, AccountDto accountDto, AccountStatus status);
 
     ResponseEntity<?> deleteAllAccounts();
 }

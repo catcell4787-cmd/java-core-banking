@@ -33,15 +33,15 @@ class AccountController {
         return accountService.findByEmail(email);
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public ResponseEntity<?> signUp(@Valid @RequestBody AccountDto accountDto) {
-        return accountService.signUp(accountDto, AccountRole.CLIENT, AccountStatus.PENDING);
+        return accountService.register(accountDto, AccountRole.CLIENT, AccountStatus.PENDING);
     }
 
-    @PostMapping("/signin")
+    @PostMapping("/login")
     public ResponseEntity<AuthTokenDto> signIn(@RequestBody AccountCredentialsDto accountCredentialsDto) {
         try {
-            AuthTokenDto authTokenDto = accountService.signIn(accountCredentialsDto);
+            AuthTokenDto authTokenDto = accountService.login(accountCredentialsDto);
             return ResponseEntity.ok(authTokenDto);
         } catch (AuthenticationException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -50,7 +50,12 @@ class AccountController {
 
     @PutMapping("/edit/{email}")
     public ResponseEntity<?> editAccount(@PathVariable String email, @Valid @RequestBody AccountDto accountDto) {
-        return accountService.editAccount(email, accountDto);
+        return accountService.edit(email, accountDto);
+    }
+
+    @PatchMapping("/updateStatus/{email}")
+    public ResponseEntity<?> updateAccountStatus(@PathVariable String email, @RequestBody AccountDto accountDto, AccountStatus status) {
+        return accountService.updateStatus(email, accountDto, status);
     }
 
     @PostMapping("/refresh")

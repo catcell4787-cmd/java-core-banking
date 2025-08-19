@@ -16,8 +16,13 @@ import org.springframework.web.bind.annotation.*;
 public class ManagerController {
     private final AccountService accountService;
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public ResponseEntity<?> addAccount(@RequestBody @Valid AccountDto accountDto) {
-        return accountService.signUp(accountDto, AccountRole.MANAGER, AccountStatus.ACTIVE);
+        return accountService.register(accountDto, AccountRole.MANAGER, AccountStatus.ACTIVE);
+    }
+
+    @PatchMapping("/updateStatus/{email}")
+    public ResponseEntity<?> updateAccountStatus(@PathVariable String email, @RequestBody AccountDto accountDto, AccountStatus status) {
+        return accountService.updateStatus(email, accountDto, status);
     }
 }

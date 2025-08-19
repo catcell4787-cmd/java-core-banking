@@ -1,4 +1,4 @@
-package org.example.accountservice.security;
+package org.example.accountservice.config;
 
 import lombok.RequiredArgsConstructor;
 import org.example.accountservice.security.jwt.JwtFilter;
@@ -47,9 +47,10 @@ public class SecurityConfig {
                         // Настройка доступа к конечным точкам
                         auth ->
                                 auth
-                                        .requestMatchers("/accounts/**").permitAll()
-                                        .requestMatchers("/managers/signup").hasAuthority("ADMIN")
-                                        .anyRequest().authenticated())
+                .requestMatchers("/accounts/register", "/accounts/login").permitAll()
+                .requestMatchers("/managers/register").hasAuthority("ADMIN")
+                .requestMatchers("/accounts/edit/**", "/accounts/updateStatus/**").hasAuthority("MANAGER")
+                .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
