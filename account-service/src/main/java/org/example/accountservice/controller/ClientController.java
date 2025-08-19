@@ -11,30 +11,30 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/managers")
-public class ManagerController {
+@RequestMapping("/clients")
+public class ClientController {
+
     private final AccountService accountService;
 
     @GetMapping("/list")
-    public List<AccountDto> getAllManagers() {
-        return accountService.findAllByRole(AccountRole.MANAGER);
+    public List<AccountDto> getAllClients() {
+        return accountService.findAllByRole(AccountRole.CLIENT);
     }
 
-    @PostMapping("/hire")
-    public ResponseEntity<?> addManager(@RequestBody @Valid AccountDto accountDto) {
-        return accountService.register(accountDto, AccountRole.MANAGER, AccountStatus.ACTIVE);
+    @GetMapping("/{email}")
+    public AccountDto findByEmail(@PathVariable String email) {
+        return accountService.findByEmail(email);
+    }
+
+    @PutMapping("/edit/{email}")
+    public ResponseEntity<?> editAccount(@PathVariable String email, @Valid @RequestBody AccountDto accountDto) {
+        return accountService.edit(email, accountDto);
     }
 
     @PatchMapping("/updateStatus/{email}")
     public ResponseEntity<?> updateAccountStatus(@PathVariable String email, @RequestBody AccountDto accountDto, AccountStatus status) {
         return accountService.updateStatus(email, accountDto, status);
-    }
-
-    @PutMapping("/edit/{email}")
-    public ResponseEntity<?> editAccount(@PathVariable String email, @RequestBody AccountDto accountDto) {
-        return accountService.edit(email, accountDto);
     }
 }
