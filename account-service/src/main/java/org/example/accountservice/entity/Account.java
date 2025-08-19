@@ -18,11 +18,11 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
+    @NotBlank(message = "Enter your firstname")
     private String firstname;
-
+    @NotBlank(message = "Enter your lastname")
     private String lastname;
-
+    @NotBlank(message = "Enter your password")
     private String password;
 
     @Email(message = "Email syntax is not correct")

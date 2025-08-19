@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     Logger logger = LogManager.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<ErrorData> handleResourceNotFoundException(ConflictException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorData> handleConflictException(ConflictException ex, HttpServletRequest request) {
         ErrorData errorData = new ErrorData(
                 HttpStatus.CONFLICT.value(),
                 ex.getMessage(),
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorData> handleBadRequestException(MethodArgumentNotValidException ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorData> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
         ErrorData errorData = new ErrorData(
                 HttpStatus.BAD_REQUEST.value(),
                 "Validation error",
@@ -51,19 +51,7 @@ public class GlobalExceptionHandler {
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             errorData.addValidationError(fieldError.getField(), fieldError.getDefaultMessage());
         }
-        logger.error(errorData.toString());
         return new ResponseEntity<>(errorData, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ErrorData> handleGenericException(Exception ex, HttpServletRequest request) {
-        ErrorData errorData = new ErrorData(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                ex.getMessage(),
-                request.getRequestURI());
-        logger.error(errorData.toString());
-        return new ResponseEntity<>(errorData, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(AuthenticationException.class)

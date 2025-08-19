@@ -32,19 +32,23 @@ public class AccountsServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public AuthTokenDto signIn(AccountCredentialsDto accountCredentialsDto)  {
-        Account account = findByCredentials(accountCredentialsDto);
-        return jwtService.generateAuthToken(account.getEmail());
+    public Account signUp(Account account, AccountRole role, AccountStatus status) {
+        if (accountRepository.existsByEmail(account.getEmail())) {
+            throw new GlobalExceptionHandler.ConflictException("Email already exists");
+        }
+        Account newAccount = new  Account();
+        newAccount.setPassword(passwordEncoder.encode(account.getPassword()));
+        newAccount.setStatus(AccountStatus.PENDING);
+        newAccount.setRole(role);
+        newAccount.setStatus(status);
+        accountRepository.save(newAccount);
+        return newAccount;
     }
 
     @Override
-    public AuthTokenDto refreshToken(RefreshTokenDto refreshTokenDto) throws Exception {
-        String refreshToken = refreshTokenDto.getRefreshToken();
-        if (refreshToken != null && jwtService.validateJwtToken(refreshToken)) {
-            AccountDto account = findByEmail(jwtService.getEmailFromToken(refreshToken));
-            return jwtService.refreshBaseToken(account.getEmail(), refreshToken);
-        }
-        throw new AuthenticationException("Invalid refresh token");
+    public AuthTokenDto signIn(AccountCredentialsDto accountCredentialsDto)  {
+        Account account = findByCredentials(accountCredentialsDto);
+        return jwtService.generateAuthToken(account.getEmail());
     }
 
     @Override
@@ -63,20 +67,14 @@ public class AccountsServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto signUp(AccountDto accountDto, AccountRole role, AccountStatus status) {
-        Account newAccount = modelMapper.map(accountDto, Account.class);
-        if (accountRepository.existsByEmail(newAccount.getEmail())) {
-            throw new GlobalExceptionHandler.ConflictException("Email already exists");
+    public AuthTokenDto refreshToken(RefreshTokenDto refreshTokenDto) throws Exception {
+        String refreshToken = refreshTokenDto.getRefreshToken();
+        if (refreshToken != null && jwtService.validateJwtToken(refreshToken)) {
+            AccountDto account = findByEmail(jwtService.getEmailFromToken(refreshToken));
+            return jwtService.refreshBaseToken(account.getEmail(), refreshToken);
         }
-        newAccount.setPassword(passwordEncoder.encode(accountDto.getPassword()));
-        newAccount.setStatus(AccountStatus.PENDING);
-        newAccount.setRole(role);
-        newAccount.setStatus(status);
-        accountRepository.save(newAccount);
-        accountDto = modelMapper.map(newAccount, AccountDto.class);
-        return accountDto;
+        throw new AuthenticationException("Invalid refresh token");
     }
-
 
     @Override
     public ResponseEntity<?> deleteAllAccounts() {

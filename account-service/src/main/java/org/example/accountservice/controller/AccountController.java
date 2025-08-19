@@ -6,6 +6,7 @@ import org.example.accountservice.dto.AccountCredentialsDto;
 import org.example.accountservice.dto.AccountDto;
 import org.example.accountservice.dto.AuthTokenDto;
 import org.example.accountservice.dto.RefreshTokenDto;
+import org.example.accountservice.entity.Account;
 import org.example.accountservice.role.AccountRole;
 import org.example.accountservice.role.AccountStatus;
 import org.example.accountservice.service.AccountService;
@@ -34,7 +35,7 @@ class AccountController {
     }
 
     @PostMapping("/signup")
-    public AccountDto registerAccount(@Valid @RequestBody AccountDto account) {
+    public Account registerAccount(@RequestBody @Valid Account account) {
         return accountService.signUp(account, AccountRole.CLIENT, AccountStatus.PENDING);
     }
 
