@@ -27,6 +27,11 @@ class AccountController {
         return accountService.findAll();
     }
 
+    @GetMapping("/email/{email}")
+    public AccountDto findByEmail(@PathVariable String email) {
+        return accountService.findByEmail(email);
+    }
+
     @PostMapping("/signup")
     public ResponseEntity<?> registerAccount(@Valid @RequestBody AccountDto account) {
         return accountService.registerAccount(account, AccountRole.CLIENT);

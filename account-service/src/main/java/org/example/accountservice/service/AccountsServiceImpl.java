@@ -41,7 +41,7 @@ public class AccountsServiceImpl implements AccountService {
     public AuthTokenDto refreshToken(RefreshTokenDto refreshTokenDto) throws Exception {
         String refreshToken = refreshTokenDto.getRefreshToken();
         if (refreshToken != null && jwtService.validateJwtToken(refreshToken)) {
-            Account account = findByEmail(jwtService.getEmailFromToken(refreshToken));
+            AccountDto account = findByEmail(jwtService.getEmailFromToken(refreshToken));
             return jwtService.refreshBaseToken(account.getEmail(), refreshToken);
         }
         throw new AuthenticationException("Invalid refresh token");
@@ -54,9 +54,12 @@ public class AccountsServiceImpl implements AccountService {
     }
 
     @Override
-    public Account findByEmail(String email) {
-        return accountRepository.findByEmail(email).orElseThrow(()
-                -> new GlobalExceptionHandler.ResourceNotFoundException("Account with email " + email + " not found"));
+    public AccountDto findByEmail(String email) {
+        AccountDto accountDto = modelMapper.map(accountRepository.findByEmail(email), AccountDto.class);
+        if  (accountDto == null) {
+            throw new GlobalExceptionHandler.ResourceNotFoundException("Account with email " + email + " not found");
+        }
+        return accountDto;
     }
 
     @Override

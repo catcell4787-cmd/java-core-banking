@@ -4,7 +4,6 @@ import org.example.accountservice.dto.AccountCredentialsDto;
 import org.example.accountservice.dto.AccountDto;
 import org.example.accountservice.dto.AuthTokenDto;
 import org.example.accountservice.dto.RefreshTokenDto;
-import org.example.accountservice.entity.Account;
 import org.example.accountservice.role.AccountRole;
 import org.springframework.http.ResponseEntity;
 
@@ -18,7 +17,7 @@ public interface AccountService {
 
     List<AccountDto> findAll();
 
-    Account findByEmail(String email);
+    AccountDto findByEmail(String email);
 
     ResponseEntity<?> registerAccount(AccountDto account, AccountRole role);
 
