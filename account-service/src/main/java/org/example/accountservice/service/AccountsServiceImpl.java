@@ -46,7 +46,7 @@ public class AccountsServiceImpl implements AccountService {
     }
 
     @Override
-    public AuthTokenDto login(AccountCredentialsDto accountCredentialsDto)  {
+    public AuthTokenDto login(AccountCredentialsDto accountCredentialsDto) {
         Account account = findByCredentials(accountCredentialsDto);
         return jwtService.generateAuthToken(account.getEmail());
     }
@@ -88,7 +88,7 @@ public class AccountsServiceImpl implements AccountService {
     @Override
     public AccountDto findByEmail(String email) {
         AccountDto accountDto = modelMapper.map(accountRepository.findByEmail(email), AccountDto.class);
-        if  (accountDto == null) {
+        if (accountDto == null) {
             throw new GlobalExceptionHandler.ResourceNotFoundException("Account with email " + email + " not found");
         }
         return accountDto;
