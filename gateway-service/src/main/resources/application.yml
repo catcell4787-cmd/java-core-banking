@@ -1,0 +1,17 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: auth-service
+              uri: http://192.168.50.210:8080
+              predicates:
+                - Path=/**
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
