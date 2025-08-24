@@ -1,12 +1,8 @@
 package org.example.authservice.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.authservice.dto.AccountCredentialsDto;
-import org.example.authservice.dto.AccountDto;
 import org.example.authservice.dto.AuthTokenDto;
-import org.example.authservice.role.AccountRole;
-import org.example.authservice.role.AccountStatus;
 import org.example.authservice.service.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +19,6 @@ import javax.naming.AuthenticationException;
 class AuthController {
 
     private final AccountService accountService;
-
-    @PostMapping("/register")
-    public ResponseEntity<?> signUp(@Valid @RequestBody AccountDto accountDto) {
-        return accountService.register(accountDto, AccountRole.CLIENT, AccountStatus.PENDING);
-    }
 
     @PostMapping("/login")
     public ResponseEntity<AuthTokenDto> signIn(@RequestBody AccountCredentialsDto accountCredentialsDto) {

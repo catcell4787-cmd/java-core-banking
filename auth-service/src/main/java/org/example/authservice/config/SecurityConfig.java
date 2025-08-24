@@ -47,7 +47,7 @@ public class SecurityConfig {
                         // Настройка доступа к конечным точкам
                         auth ->
                                 auth
-                                        .requestMatchers("/accounts/register", "/accounts/login").permitAll()
+                                        .requestMatchers("/accounts/login").permitAll()
                                         .requestMatchers("/managers/**", "/clients/list").hasAuthority("ADMIN")
                                         .requestMatchers("/clients/edit/**", "/clients/updateStatus/**").hasAuthority("MANAGER")
                                         .anyRequest().authenticated())
