@@ -2,6 +2,7 @@ package org.example.authservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.authservice.dto.AccountCredentialsDto;
+import org.example.authservice.dto.AccountDto;
 import org.example.authservice.dto.AuthTokenDto;
 import org.example.authservice.service.AccountService;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.naming.AuthenticationException;
 
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 class AuthController {
 
@@ -28,5 +29,10 @@ class AuthController {
         } catch (AuthenticationException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody AccountDto accountDto) {
+        return ResponseEntity.ok(accountService.register(accountDto));
     }
 }

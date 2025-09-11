@@ -12,6 +12,7 @@ import org.example.authservice.exception.GlobalExceptionHandler;
 import org.example.authservice.repository.AccountRepository;
 import org.example.authservice.security.jwt.JwtService;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,19 +29,17 @@ public class AccountsServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
     Logger logger = LogManager.getLogger(AccountsServiceImpl.class);
 
-//    @Override
-//    public ResponseEntity<?> register(AccountDto accountDto, AccountRole role, AccountStatus status) {
-//        if (accountRepository.existsByEmail(accountDto.getEmail())) {
-//            throw new GlobalExceptionHandler.ConflictException("Email already exists");
-//        }
-//        Account account = modelMapper.map(accountDto, Account.class);
-//        account.setPassword(passwordEncoder.encode(account.getPassword()));
-//        account.setStatus(status);
-//        account.setRole(role);
-//        accountRepository.save(account);
-//        logger.info("Account registered successfully", account);
-//        return ResponseEntity.ok(account);
-//    }
+    @Override
+    public ResponseEntity<?> register(AccountDto accountDto) {
+        if (accountRepository.existsByEmail(accountDto.getEmail())) {
+            throw new GlobalExceptionHandler.ConflictException("Email already exists");
+        }
+        Account account = modelMapper.map(accountDto, Account.class);
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        accountRepository.save(account);
+        logger.info("Account registered successfully", account);
+        return ResponseEntity.ok(account);
+    }
 
     @Override
     public AuthTokenDto login(AccountCredentialsDto accountCredentialsDto) {

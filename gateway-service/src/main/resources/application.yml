@@ -9,9 +9,9 @@ spring:
         webflux:
           routes:
             - id: auth-service
-              uri: http://192.168.50.210:8081
+              uri: http://localhost:8081
               predicates:
-                - Path=/**
+                - Path=/auth/**
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
@@ -19,5 +19,3 @@ eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
-    defaultZone: http://192.168.50.210:8761/eureka
-    enabled: true

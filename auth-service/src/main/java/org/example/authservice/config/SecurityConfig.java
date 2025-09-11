@@ -47,9 +47,9 @@ public class SecurityConfig {
                         // Настройка доступа к конечным точкам
                         auth ->
                                 auth
-                                        .requestMatchers("/accounts/login").permitAll()
-                                        .requestMatchers("/managers/**", "/clients/list").hasAuthority("ADMIN")
-                                        .requestMatchers("/clients/edit/**", "/clients/updateStatus/**").hasAuthority("MANAGER")
+                                        .requestMatchers("/auth/login", "/auth/register").permitAll()
+//                                        .requestMatchers("/managers/**", "/clients/list").hasAuthority("ADMIN")
+//                                        .requestMatchers("/clients/edit/**", "/clients/updateStatus/**").hasAuthority("MANAGER")
                                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

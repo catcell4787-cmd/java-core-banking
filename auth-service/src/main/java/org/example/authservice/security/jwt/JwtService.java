@@ -38,7 +38,7 @@ public class JwtService {
 
     public String getEmailFromToken(String token) {
         Claims claims = Jwts.parser()
-                .verifyWith(getSingInKey())
+                .verifyWith(getSignInKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
@@ -48,7 +48,7 @@ public class JwtService {
     public boolean validateJwtToken(String token) {
         try {
             Jwts.parser()
-                    .verifyWith(getSingInKey())
+                    .verifyWith(getSignInKey())
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
@@ -72,7 +72,7 @@ public class JwtService {
         return Jwts.builder()
                 .subject(email)
                 .expiration(date)
-                .signWith(getSingInKey())
+                .signWith(getSignInKey())
                 .compact();
     }
 
@@ -81,11 +81,11 @@ public class JwtService {
         return Jwts.builder()
                 .subject(email)
                 .expiration(date)
-                .signWith(getSingInKey())
+                .signWith(getSignInKey())
                 .compact();
     }
 
-    private SecretKey getSingInKey() {
+    private SecretKey getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
