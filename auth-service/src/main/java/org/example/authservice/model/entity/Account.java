@@ -8,15 +8,15 @@ import org.example.authservice.enums.AccountStatus;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.List;
 
 @Entity
 @Data
 @Table(name = "accounts")
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @NotBlank(message = "Enter your password")
     @Column(name = "password")
@@ -27,15 +27,20 @@ public class Account {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "reg_date")
+    @Column(name = "registered")
     @CreationTimestamp
-    private LocalDateTime regDate;
+    private LocalDateTime registered;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "role")
-    private Role role;
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "account_role",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private List<Role> role;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private AccountStatus status;
 
 }

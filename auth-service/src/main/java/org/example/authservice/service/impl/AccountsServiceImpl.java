@@ -3,13 +3,12 @@ package org.example.authservice.service.impl;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.authservice.enums.AccountRole;
 import org.example.authservice.enums.AccountStatus;
+import org.example.authservice.exception.GlobalExceptionHandler;
 import org.example.authservice.model.dto.AccountCredentialsDto;
 import org.example.authservice.model.dto.AccountDto;
 import org.example.authservice.model.dto.AuthTokenDto;
 import org.example.authservice.model.entity.Account;
-import org.example.authservice.exception.GlobalExceptionHandler;
 import org.example.authservice.model.entity.Role;
 import org.example.authservice.repository.AccountRepository;
 import org.example.authservice.security.jwt.JwtService;
@@ -41,10 +40,10 @@ public class AccountsServiceImpl implements AccountService {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         account.setStatus(AccountStatus.PENDING);
         Role role = new Role();
-        role.setRoleName(AccountRole.CLIENT.name());
-        account.setRole(role);
+        role.setRole("CLIENT");
+        account.setRole(List.of(role));
         accountRepository.save(account);
-        log.warn("Account registered successfully: {}", account);
+        log.warn("account registered successfully: {}", account);
         return ResponseEntity.ok(account);
     }
 
@@ -63,7 +62,7 @@ public class AccountsServiceImpl implements AccountService {
     public AccountDto findByEmail(String email) {
         AccountDto accountDto = modelMapper.map(accountRepository.findByEmail(email), AccountDto.class);
         if (accountDto == null) {
-            throw new GlobalExceptionHandler.ResourceNotFoundException("Account with email " + email + " not found");
+            throw new GlobalExceptionHandler.ResourceNotFoundException("account with email " + email + " not found");
         }
         return accountDto;
     }
@@ -86,12 +85,12 @@ public class AccountsServiceImpl implements AccountService {
         String admin = "admin";
         if (!accountRepository.existsByEmail("admin@admin.com")) {
             Account account = new Account();
-            Role role = new Role();
-            role.setRoleName("ADMIN");
-            account.setRole(role);
             account.setEmail("admin@admin.com");
             account.setPassword(passwordEncoder.encode(admin));
             account.setStatus(AccountStatus.ACTIVE);
+            Role role = new Role();
+            role.setRole("ADMIN");
+            account.setRole(List.of(role));
             accountRepository.save(account);
         }
     }

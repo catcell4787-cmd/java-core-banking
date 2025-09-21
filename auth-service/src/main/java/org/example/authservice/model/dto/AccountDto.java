@@ -6,12 +6,10 @@ import lombok.Data;
 import org.example.authservice.enums.AccountRole;
 import org.example.authservice.enums.AccountStatus;
 
-import java.util.UUID;
-
 @Data
 public class AccountDto {
 
-    private UUID id;
+    private Long id;
 
     @Email(message = "Email syntax is not correct")
     @NotBlank(message = "Enter your email")

@@ -13,6 +13,7 @@ spring:
     open-in-view: true
     hibernate:
       ddl-auto: update
+    show-sql: true
 eureka:
   client:
     register-with-eureka: true
