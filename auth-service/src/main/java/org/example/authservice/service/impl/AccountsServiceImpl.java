@@ -2,13 +2,12 @@ package org.example.authservice.service.impl;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
+import org.example.authservice.enums.AccountRole;
 import org.example.authservice.enums.AccountStatus;
 import org.example.authservice.model.dto.AccountCredentialsDto;
 import org.example.authservice.model.dto.AccountDto;
 import org.example.authservice.model.dto.AuthTokenDto;
-import org.example.authservice.model.dto.RefreshTokenDto;
 import org.example.authservice.model.entity.Account;
 import org.example.authservice.exception.GlobalExceptionHandler;
 import org.example.authservice.model.entity.Role;
@@ -20,11 +19,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AccountsServiceImpl implements AccountService {
 
@@ -32,7 +31,6 @@ public class AccountsServiceImpl implements AccountService {
     private final ModelMapper modelMapper;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
-    Logger logger = LogManager.getLogger(AccountsServiceImpl.class);
 
     @Override
     public ResponseEntity<?> register(AccountDto accountDto) {
@@ -41,8 +39,12 @@ public class AccountsServiceImpl implements AccountService {
         }
         Account account = modelMapper.map(accountDto, Account.class);
         account.setPassword(passwordEncoder.encode(account.getPassword()));
+        account.setStatus(AccountStatus.PENDING);
+        Role role = new Role();
+        role.setRoleName(AccountRole.CLIENT.name());
+        account.setRole(role);
         accountRepository.save(account);
-        logger.info("Account registered successfully", account);
+        log.warn("Account registered successfully: {}", account);
         return ResponseEntity.ok(account);
     }
 
@@ -73,20 +75,10 @@ public class AccountsServiceImpl implements AccountService {
             if (passwordEncoder.matches(accountCredentialsDto.getPassword(), account.getPassword())) {
                 return account;
             } else {
-                throw new org.example.authservice.exception.GlobalExceptionHandler.AuthenticationException("Invalid password");
+                throw new GlobalExceptionHandler.AuthenticationException("Invalid password");
             }
         }
-        throw new org.example.authservice.exception.GlobalExceptionHandler.AuthenticationException("Invalid email");
-    }
-
-    @Override
-    public AuthTokenDto refreshToken(RefreshTokenDto refreshTokenDto) throws Exception {
-        String refreshToken = refreshTokenDto.getRefreshToken();
-        if (refreshToken != null && jwtService.validateJwtToken(refreshToken)) {
-            AccountDto account = findByEmail(jwtService.getEmailFromToken(refreshToken));
-            return jwtService.refreshBaseToken(account.getEmail(), refreshToken);
-        }
-        throw new AuthenticationException("Invalid refresh token");
+        throw new GlobalExceptionHandler.AuthenticationException("Invalid email");
     }
 
     @PostConstruct

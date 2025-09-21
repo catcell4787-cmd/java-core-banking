@@ -3,8 +3,7 @@ package org.example.authservice.security.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.example.authservice.model.dto.AuthTokenDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,9 +14,8 @@ import java.time.ZoneId;
 import java.util.Date;
 
 @Component
+@Slf4j
 public class JwtService {
-
-    private static final Logger LOGGER = LogManager.getLogger(JwtService.class);
 
     @Value("ce18475d5bb7c6dfb13b22b845ffc02b47c5500fadf4563919ef116ce2a4109b")
     private String jwtSecret;
@@ -27,44 +25,6 @@ public class JwtService {
         jwtDto.setToken(generateJwtToken(email));
         jwtDto.setRefreshToken(generateRefreshToken(email));
         return jwtDto;
-    }
-
-    public AuthTokenDto refreshBaseToken(String email, String refreshToken) {
-        AuthTokenDto jwtDto = new AuthTokenDto();
-        jwtDto.setToken(generateJwtToken(email));
-        jwtDto.setRefreshToken(refreshToken);
-        return jwtDto;
-    }
-
-    public String getEmailFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(getSignInKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-        return claims.getSubject();
-    }
-
-    public boolean validateJwtToken(String token) {
-        try {
-            Jwts.parser()
-                    .verifyWith(getSignInKey())
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
-            return true;
-        } catch (ExpiredJwtException expEx) {
-            LOGGER.error("Expired JwtException", expEx);
-        } catch (UnsupportedJwtException expEx) {
-            LOGGER.error("Unsupported JwtException", expEx);
-        } catch (MalformedJwtException expEx) {
-            LOGGER.error("Malformed JwtException", expEx);
-        } catch (SecurityException expEx) {
-            LOGGER.error("Security Exception", expEx);
-        } catch (Exception expEx) {
-            LOGGER.error("invalid token", expEx);
-        }
-        return false;
     }
 
     private String generateJwtToken(String email) {
@@ -89,4 +49,37 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+    public String getEmailFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(getSignInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return claims.getSubject();
+    }
+
+    public boolean validateJwtToken(String token) {
+        try {
+            Jwts.parser()
+                    .verifyWith(getSignInKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+            return true;
+        } catch (ExpiredJwtException expEx) {
+            log.error("Expired JwtException", expEx);
+        } catch (UnsupportedJwtException expEx) {
+            log.error("Unsupported JwtException", expEx);
+        } catch (MalformedJwtException expEx) {
+            log.error("Malformed JwtException", expEx);
+        } catch (SecurityException expEx) {
+            log.error("Security Exception", expEx);
+        } catch (Exception expEx) {
+            log.error("invalid token", expEx);
+        }
+        return false;
+    }
+
+
 }

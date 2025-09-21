@@ -3,6 +3,8 @@ package org.example.authservice.model.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.example.authservice.enums.AccountRole;
+import org.example.authservice.enums.AccountStatus;
 
 import java.util.UUID;
 
@@ -17,5 +19,9 @@ public class AccountDto {
 
     @NotBlank(message = "Enter your password")
     private String password;
+
+    private AccountRole role;
+
+    private AccountStatus status;
 
 }

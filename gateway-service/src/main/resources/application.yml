@@ -12,8 +12,6 @@ spring:
               uri: lb://auth-service
               predicates:
                 - Path=/auth/**
-              filters:
-                name: JwtFilter
 eureka:
   client:
     register-with-eureka: true
