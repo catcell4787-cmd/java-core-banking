@@ -1,16 +1,15 @@
 package org.example.authservice.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.authservice.enums.AccountStatus;
 import org.example.authservice.model.dto.AccountCredentialsDto;
 import org.example.authservice.model.dto.AccountDto;
 import org.example.authservice.model.dto.AuthTokenDto;
+import org.example.authservice.model.entity.Account;
 import org.example.authservice.service.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
 
@@ -33,6 +32,13 @@ class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody AccountDto accountDto) {
-        return ResponseEntity.ok(accountService.register(accountDto));
+        return ResponseEntity.ok(
+                accountService.register(
+                        accountDto, "CLIENT", AccountStatus.PENDING));
+    }
+
+    @GetMapping("/{email}")
+    public Account getAccount(@PathVariable String email) {
+        return accountService.findByEmail(email);
     }
 }

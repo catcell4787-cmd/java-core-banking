@@ -12,5 +12,5 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
 logging:
-  config: logback-spring.xml
+  config: classpath:logback-spring.xml
 

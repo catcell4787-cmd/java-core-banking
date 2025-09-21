@@ -3,6 +3,7 @@ package org.example.authservice.service.impl;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.authservice.enums.AccountRole;
 import org.example.authservice.enums.AccountStatus;
 import org.example.authservice.exception.GlobalExceptionHandler;
 import org.example.authservice.model.dto.AccountCredentialsDto;
@@ -32,15 +33,15 @@ public class AccountsServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public ResponseEntity<?> register(AccountDto accountDto) {
+    public ResponseEntity<?> register(AccountDto accountDto, String accountRole, AccountStatus accountStatus) {
         if (accountRepository.existsByEmail(accountDto.getEmail())) {
             throw new GlobalExceptionHandler.ConflictException("Email already exists");
         }
         Account account = modelMapper.map(accountDto, Account.class);
         account.setPassword(passwordEncoder.encode(account.getPassword()));
-        account.setStatus(AccountStatus.PENDING);
+        account.setStatus(accountStatus);
         Role role = new Role();
-        role.setRole("CLIENT");
+        role.setRole(accountRole);
         account.setRole(List.of(role));
         accountRepository.save(account);
         log.warn("account registered successfully: {}", account);
@@ -53,18 +54,30 @@ public class AccountsServiceImpl implements AccountService {
     }
 
     @Override
-    public AuthTokenDto login(AccountCredentialsDto accountCredentialsDto) {
-        Account account = findByCredentials(accountCredentialsDto);
-        return jwtService.generateAuthToken(account.getEmail());
+    public ResponseEntity<?> updateStatus(String email, AccountDto accountDto) {
+        Optional<Account> optionalAccount = accountRepository.findByEmail(email);
+        if (optionalAccount.isPresent()) {
+            Account account = optionalAccount.get();
+            account.setStatus(accountDto.getStatus());
+            return ResponseEntity.ok(accountRepository.save(account));
+        } else {
+            throw new GlobalExceptionHandler.ResourceNotFoundException("account with email " + email + " not found");
+        }
     }
 
     @Override
-    public AccountDto findByEmail(String email) {
-        AccountDto accountDto = modelMapper.map(accountRepository.findByEmail(email), AccountDto.class);
-        if (accountDto == null) {
-            throw new GlobalExceptionHandler.ResourceNotFoundException("account with email " + email + " not found");
+    public Account findByEmail(String email) {
+        Optional<Account> optionalAccount = accountRepository.findByEmail(email);
+        if (optionalAccount.isPresent()) {
+            return optionalAccount.get();
         }
-        return accountDto;
+        throw new GlobalExceptionHandler.ResourceNotFoundException("account with email " + email + " not found");
+    }
+
+    @Override
+    public AuthTokenDto login(AccountCredentialsDto accountCredentialsDto) {
+        Account account = findByCredentials(accountCredentialsDto);
+        return jwtService.generateAuthToken(account.getEmail());
     }
 
     private Account findByCredentials(AccountCredentialsDto accountCredentialsDto) {

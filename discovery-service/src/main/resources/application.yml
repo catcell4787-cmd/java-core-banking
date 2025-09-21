@@ -8,4 +8,4 @@ eureka:
     register-with-eureka: false
     fetch-registry: false
 logging:
-  config: logback-spring.xml
+  config: classpath:logback-spring.xml
