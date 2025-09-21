@@ -1,9 +1,9 @@
 package org.example.authservice.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.authservice.dto.AccountCredentialsDto;
-import org.example.authservice.dto.AccountDto;
-import org.example.authservice.dto.AuthTokenDto;
+import org.example.authservice.model.dto.AccountCredentialsDto;
+import org.example.authservice.model.dto.AccountDto;
+import org.example.authservice.model.dto.AuthTokenDto;
 import org.example.authservice.service.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

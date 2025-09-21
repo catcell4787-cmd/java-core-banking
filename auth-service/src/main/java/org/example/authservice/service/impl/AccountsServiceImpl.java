@@ -1,22 +1,27 @@
-package org.example.authservice.service;
+package org.example.authservice.service.impl;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.authservice.dto.AccountCredentialsDto;
-import org.example.authservice.dto.AccountDto;
-import org.example.authservice.dto.AuthTokenDto;
-import org.example.authservice.dto.RefreshTokenDto;
-import org.example.authservice.entity.Account;
+import org.example.authservice.enums.AccountStatus;
+import org.example.authservice.model.dto.AccountCredentialsDto;
+import org.example.authservice.model.dto.AccountDto;
+import org.example.authservice.model.dto.AuthTokenDto;
+import org.example.authservice.model.dto.RefreshTokenDto;
+import org.example.authservice.model.entity.Account;
 import org.example.authservice.exception.GlobalExceptionHandler;
+import org.example.authservice.model.entity.Role;
 import org.example.authservice.repository.AccountRepository;
 import org.example.authservice.security.jwt.JwtService;
+import org.example.authservice.service.AccountService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.naming.AuthenticationException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,6 +47,11 @@ public class AccountsServiceImpl implements AccountService {
     }
 
     @Override
+    public List<Account> findAll() {
+        return accountRepository.findAll();
+    }
+
+    @Override
     public AuthTokenDto login(AccountCredentialsDto accountCredentialsDto) {
         Account account = findByCredentials(accountCredentialsDto);
         return jwtService.generateAuthToken(account.getEmail());
@@ -56,10 +66,10 @@ public class AccountsServiceImpl implements AccountService {
         return accountDto;
     }
 
-    private Account findByCredentials(org.example.authservice.dto.AccountCredentialsDto accountCredentialsDto) {
-        Optional<org.example.authservice.entity.Account> optionalAccount = accountRepository.findByEmail(accountCredentialsDto.getEmail());
+    private Account findByCredentials(AccountCredentialsDto accountCredentialsDto) {
+        Optional<Account> optionalAccount = accountRepository.findByEmail(accountCredentialsDto.getEmail());
         if (optionalAccount.isPresent()) {
-            org.example.authservice.entity.Account account = optionalAccount.get();
+            Account account = optionalAccount.get();
             if (passwordEncoder.matches(accountCredentialsDto.getPassword(), account.getPassword())) {
                 return account;
             } else {
@@ -79,16 +89,18 @@ public class AccountsServiceImpl implements AccountService {
         throw new AuthenticationException("Invalid refresh token");
     }
 
-//    @PostConstruct
-//    public void createAdmin() {
-//        String admin = "admin";
-//        if (!accountRepository.existsByEmail("admin@admin.com")) {
-//            Account account = new Account();
-//            account.setRole(AccountRole.ADMIN);
-//            account.setEmail("admin@admin.com");
-//            account.setPassword(passwordEncoder.encode(admin));
-//            account.setStatus(AccountStatus.ACTIVE);
-//            accountRepository.save(account);
-//        }
-//    }
+    @PostConstruct
+    public void createAdmin() {
+        String admin = "admin";
+        if (!accountRepository.existsByEmail("admin@admin.com")) {
+            Account account = new Account();
+            Role role = new Role();
+            role.setRoleName("ADMIN");
+            account.setRole(role);
+            account.setEmail("admin@admin.com");
+            account.setPassword(passwordEncoder.encode(admin));
+            account.setStatus(AccountStatus.ACTIVE);
+            accountRepository.save(account);
+        }
+    }
 }

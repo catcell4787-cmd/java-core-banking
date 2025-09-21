@@ -6,16 +6,18 @@ spring:
   cloud:
     gateway:
       server:
-        webflux:
+        webmvc:
           routes:
             - id: auth-service
-              uri: http://localhost:8081
+              uri: lb://auth-service
               predicates:
                 - Path=/auth/**
-logging:
-  level:
-    org.springframework.cloud.gateway: DEBUG
+              filters:
+                name: JwtFilter
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
+logging:
+  config: logback-spring.xml
+

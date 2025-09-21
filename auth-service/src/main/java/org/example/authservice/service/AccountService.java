@@ -1,12 +1,14 @@
 package org.example.authservice.service;
 
-import org.example.authservice.dto.AccountCredentialsDto;
-import org.example.authservice.dto.AccountDto;
-import org.example.authservice.dto.AuthTokenDto;
-import org.example.authservice.dto.RefreshTokenDto;
+import org.example.authservice.model.dto.AccountCredentialsDto;
+import org.example.authservice.model.dto.AccountDto;
+import org.example.authservice.model.dto.AuthTokenDto;
+import org.example.authservice.model.dto.RefreshTokenDto;
+import org.example.authservice.model.entity.Account;
 import org.springframework.http.ResponseEntity;
 
 import javax.naming.AuthenticationException;
+import java.util.List;
 
 public interface AccountService {
 
@@ -18,5 +20,5 @@ public interface AccountService {
 
     ResponseEntity<?> register(AccountDto accountDto);
 
-
+    List<Account> findAll();
 }
