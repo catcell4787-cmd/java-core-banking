@@ -5,15 +5,8 @@ spring:
     banner-mode: off
   application:
     name: auth-service
-  datasource:
-    url: jdbc:postgresql://192.168.50.210:5432/acc_db
-    username: acc
-    password: acc
-  jpa:
-    open-in-view: true
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+  config:
+    import: "optional:configserver:http://localhost:8082"
 eureka:
   client:
     register-with-eureka: true

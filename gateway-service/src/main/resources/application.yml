@@ -12,6 +12,10 @@ spring:
               uri: lb://auth-service
               predicates:
                 - Path=/**
+            - id: config-service
+              uri: lb://config-service
+              predicates:
+                - Path=/**
 eureka:
   client:
     register-with-eureka: true

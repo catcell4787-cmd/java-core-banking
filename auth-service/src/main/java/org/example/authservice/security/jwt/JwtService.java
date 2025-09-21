@@ -17,7 +17,7 @@ import java.util.Date;
 @Slf4j
 public class JwtService {
 
-    @Value("ce18475d5bb7c6dfb13b22b845ffc02b47c5500fadf4563919ef116ce2a4109b")
+    @Value("${jwt.secret}")
     private String jwtSecret;
 
     public AuthTokenDto generateAuthToken(String email) {
