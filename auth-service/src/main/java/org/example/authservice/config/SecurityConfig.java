@@ -30,6 +30,8 @@ public class SecurityConfig {
                                         .requestMatchers("/clients/list").hasAnyAuthority("ADMIN", "MANAGER")
                                         .requestMatchers("/clients/{email}/updateStatus").hasAnyAuthority("ADMIN", "MANAGER")
                                         .requestMatchers("/auth/{email}").hasAnyAuthority("ADMIN", "MANAGER")
+                                        .requestMatchers("/managers/list", "/managers/{email}/updateStatus", "/managers/hire").hasAuthority("ADMIN")
+                                        .requestMatchers("/managers/{email}", "/clients/{email}").hasAnyAuthority("ADMIN", "MANAGER")
                                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

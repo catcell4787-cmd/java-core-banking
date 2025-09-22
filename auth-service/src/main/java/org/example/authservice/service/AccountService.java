@@ -5,6 +5,7 @@ import org.example.authservice.model.dto.AccountCredentialsDto;
 import org.example.authservice.model.dto.AccountDto;
 import org.example.authservice.model.dto.AuthTokenDto;
 import org.example.authservice.model.entity.Account;
+import org.example.authservice.model.entity.Role;
 import org.springframework.http.ResponseEntity;
 
 import javax.naming.AuthenticationException;
@@ -21,4 +22,6 @@ public interface AccountService {
     ResponseEntity<?> updateStatus(String email, AccountDto accountDto);
 
     Account findByEmail(String email);
+
+    List<AccountDto> findByRole(List<Role> roles);
 }

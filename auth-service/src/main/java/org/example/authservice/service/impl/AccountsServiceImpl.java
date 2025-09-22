@@ -3,7 +3,6 @@ package org.example.authservice.service.impl;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.authservice.enums.AccountRole;
 import org.example.authservice.enums.AccountStatus;
 import org.example.authservice.exception.GlobalExceptionHandler;
 import org.example.authservice.model.dto.AccountCredentialsDto;
@@ -19,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,10 +68,19 @@ public class AccountsServiceImpl implements AccountService {
     @Override
     public Account findByEmail(String email) {
         Optional<Account> optionalAccount = accountRepository.findByEmail(email);
-        if (optionalAccount.isPresent()) {
-            return optionalAccount.get();
-        }
+        if (optionalAccount.isPresent()) return optionalAccount.get();
         throw new GlobalExceptionHandler.ResourceNotFoundException("account with email " + email + " not found");
+    }
+
+    @Override
+    public List<AccountDto> findByRole(List<Role> role) {
+        List<AccountDto> listByRoles = new ArrayList<>();
+        List<Account> accountDtos = accountRepository.findAll();
+        for (Account account : accountDtos) {
+            if (account.getRole().getFirst().getRole().equals(role.getFirst().getRole()))
+                listByRoles.add(modelMapper.map(account, AccountDto.class));
+        }
+        return listByRoles;
     }
 
     @Override
