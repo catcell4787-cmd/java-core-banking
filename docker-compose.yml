@@ -84,6 +84,28 @@ services:
       timeout: 5s
       retries: 5
     restart: unless-stopped
+    volumes:
+      - data1:/var/lib/postgresql/data
+    networks:
+      - postgres
+
+  db_cards:
+    image: postgres:latest
+    container_name: cards_db
+    environment:
+      POSTGRES_DB: cards_db
+      POSTGRES_USER: acc
+      POSTGRES_PASSWORD: acc
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U acc -d acc" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    volumes:
+      - data2:/var/lib/postgresql/data
     networks:
       - postgres
 
@@ -158,3 +180,5 @@ volumes:
     driver: local
   redisinsight-data:
     driver: local
+  data1:
+  data2:

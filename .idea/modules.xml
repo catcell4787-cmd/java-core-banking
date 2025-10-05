@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/auth-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/auth-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cards-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/cards-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/gateway-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/gateway-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/java-core-banking.iml" filepath="$PROJECT_DIR$/.idea/java-core-banking.iml" />
     </modules>
