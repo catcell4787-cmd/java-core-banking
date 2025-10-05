@@ -3,7 +3,7 @@ package org.bank.cardsservice.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.bank.cardsservice.enums.Status;
-import org.bank.cardsservice.event.CardEvent;
+import org.bank.cardsservice.exception.GlobalExceptionHandler;
 import org.bank.cardsservice.model.Card;
 import org.bank.cardsservice.repository.CardsRepository;
 import org.bank.cardsservice.service.CardsService;
@@ -21,7 +21,7 @@ public class CardsServiceImpl implements CardsService {
     @KafkaListener(topics = "register_card", groupId = "cards_group")
     public ResponseEntity<?> registerCard(ConsumerRecord<String, String> record) {
         if (cardsRepository.existsByCardHolder(record.value())) {
-            throw new RuntimeException(record.value() + " already exists");
+            throw new GlobalExceptionHandler.ConflictException("Card already exists");
         }
         Card card = new Card();
         card.setCardHolder(record.value());

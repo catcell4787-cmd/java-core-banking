@@ -3,10 +3,10 @@ package org.bank.authservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.bank.authservice.enums.Status;
 import org.bank.authservice.enums.Role;
-import org.bank.authservice.event.CardEvent;
 import org.bank.authservice.model.dto.AccountDto;
 import org.bank.authservice.model.entity.Account;
 import org.bank.authservice.service.AccountService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,8 +42,7 @@ public class ClientsController {
     }
 
     @PostMapping("/{email}/registerCard")
-    public ResponseEntity<?> registerCard(@RequestBody Account account) {
-        accountService.registerCard(account);
-        return ResponseEntity.ok("asd");
+    public ResponseEntity<?> registerCard(@PathVariable String email, @RequestBody AccountDto accountDto) {
+        return new ResponseEntity<>(accountService.registerCard(email, accountDto), HttpStatus.OK);
     }
 }

@@ -16,11 +16,7 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-#    properties:
-#      spring:
-#        json:
-#          trusted:
-#            packages: "org.bank.authservice.event.CardEvent"
+      acks: all
 eureka:
   client:
     register-with-eureka: true

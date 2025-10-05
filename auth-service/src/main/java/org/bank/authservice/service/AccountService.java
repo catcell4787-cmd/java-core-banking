@@ -1,8 +1,8 @@
 package org.bank.authservice.service;
 
+import org.apache.kafka.common.protocol.types.Field;
 import org.bank.authservice.enums.Status;
 import org.bank.authservice.enums.Role;
-import org.bank.authservice.event.CardEvent;
 import org.bank.authservice.model.dto.AccountCredentialsDto;
 import org.bank.authservice.model.dto.AccountDto;
 import org.bank.authservice.model.dto.AuthTokenDto;
@@ -30,5 +30,5 @@ public interface AccountService {
 
     ResponseEntity<?> deleteAccount(String email);
 
-    ResponseEntity<?> registerCard(Account account);
+    ResponseEntity<?> registerCard(String email, AccountDto accountDto);
 }

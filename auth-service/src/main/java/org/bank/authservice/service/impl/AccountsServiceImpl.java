@@ -2,9 +2,9 @@ package org.bank.authservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.common.protocol.types.Field;
 import org.bank.authservice.enums.Status;
 import org.bank.authservice.enums.Role;
-import org.bank.authservice.event.CardEvent;
 import org.bank.authservice.exception.GlobalExceptionHandler;
 import org.bank.authservice.model.dto.AccountCredentialsDto;
 import org.bank.authservice.model.dto.AccountDto;
@@ -16,7 +16,6 @@ import org.bank.authservice.service.AccountService;
 import org.bank.authservice.service.RoleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -78,7 +77,8 @@ public class AccountsServiceImpl implements AccountService {
     }
 
     @Override
-    public ResponseEntity<?> registerCard(Account account) {
+    public ResponseEntity<?> registerCard(String email, AccountDto accountDto) {
+        Account account = findByEmail(email);
         kafkaProducerService.sendEmail(account.getEmail());
         return ResponseEntity.ok(account);
     }
@@ -90,9 +90,8 @@ public class AccountsServiceImpl implements AccountService {
             Account account = optionalAccount.get();
             account.setStatus(accountDto.getStatus());
             return ResponseEntity.ok(accountRepository.save(account));
-        } else {
-            throw new GlobalExceptionHandler.ResourceNotFoundException("account with email " + email + " not found");
         }
+        throw new GlobalExceptionHandler.ResourceNotFoundException("account with email " + email + " not found");
     }
 
     @Override
