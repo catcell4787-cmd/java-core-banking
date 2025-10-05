@@ -12,14 +12,12 @@ spring:
               uri: lb://auth-service
               predicates:
                 - Path=/**
-            - id: config-service
-              uri: lb://config-service
-              predicates:
-                - Path=/**
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
+    service-url:
+      defaultZone: http://host.docker.internal:8761/eureka/
 logging:
   config: classpath:logback-spring.xml
 

@@ -5,7 +5,6 @@ plugins {
 }
 
 group = 'org.bank'
-version = '0.0.1-SNAPSHOT'
 description = 'config-service'
 
 java {

@@ -9,6 +9,33 @@ services:
     ports:
       - "8761:8761"
     restart: always
+    networks:
+      - jcb
+
+  gateway-service:
+    container_name: gateway-service
+    build:
+      context: .
+      dockerfile: gateway-service/Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+    networks:
+      - jcb
+    depends_on:
+      - discovery-service
+
+  auth-service:
+    container_name: auth-service
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+    ports:
+      - "8081:8081"
+    restart: always
+    networks:
+      - jcb
+      - redis-network
 
   redis:
     image: redis:alpine
@@ -78,6 +105,8 @@ networks:
   postgres:
     driver: bridge
   redis-network:
+    driver: bridge
+  jcb:
     driver: bridge
 
 volumes:

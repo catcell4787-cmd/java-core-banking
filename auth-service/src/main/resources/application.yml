@@ -6,15 +6,17 @@ spring:
   application:
     name: auth-service
   config:
-    import: "optional:configserver:http://localhost:8082"
+    import: "optional:configserver:http://192.168.50.210:8888"
   data:
     redis:
-      host: localhost
+      host: 192.168.50.210
       port: 6379
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
+    service-url:
+      defaultZone: http://host.docker.internal:8761/eureka/
 logging:
   config: classpath:logback-spring.xml
 

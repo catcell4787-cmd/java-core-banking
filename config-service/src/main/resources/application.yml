@@ -10,7 +10,7 @@ spring:
           default-label: main
           search-paths: '{application}/{profile}'
 server:
-  port: 8082
+  port: 8888
 logging:
   config: classpath:logback-spring.xml
 eureka:
