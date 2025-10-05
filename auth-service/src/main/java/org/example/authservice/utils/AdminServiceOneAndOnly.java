@@ -3,15 +3,13 @@ package org.example.authservice.utils;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.example.authservice.enums.AccountStatus;
+import org.example.authservice.enums.Role;
 import org.example.authservice.model.entity.Account;
 import org.example.authservice.repository.AccountRepository;
-import org.example.authservice.repository.RedisRoleRepository;
+import org.example.authservice.service.RoleService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +25,7 @@ public class AdminServiceOneAndOnly {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final RedisRoleRepository redisRoleRepository;
+    private final RoleService roleService;
 
     @PostConstruct
     public void createAdmin() {
@@ -36,9 +34,7 @@ public class AdminServiceOneAndOnly {
             account.setEmail(adminEmail);
             account.setPassword(passwordEncoder.encode(adminPassword));
             account.setStatus(AccountStatus.ACTIVE);
-            Set<Object> roles = new HashSet<>();
-            roles.add("ADMIN");
-            redisRoleRepository.setRolesForUser(account.getEmail(), roles);
+            roleService.saveRole(account.getEmail(), Role.ADMIN);
             accountRepository.save(account);
         }
     }

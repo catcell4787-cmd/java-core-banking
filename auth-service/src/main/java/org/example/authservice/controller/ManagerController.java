@@ -2,8 +2,11 @@ package org.example.authservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.authservice.enums.AccountStatus;
+import org.example.authservice.enums.Role;
 import org.example.authservice.model.dto.AccountDto;
+import org.example.authservice.model.entity.Account;
 import org.example.authservice.service.AccountService;
+import org.example.authservice.service.RoleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,14 +19,11 @@ import java.util.List;
 public class ManagerController {
 
     private final AccountService accountService;
-
+    private final RoleService roleService;
 
     @GetMapping("/list")
-    public List<AccountDto> listManagers() {
-//        Role role = new Role();
-//        role.setRole("MANAGER");
-//        return accountService.findByRole(List.of(role));
-        return new ArrayList<>();
+    public List<Account> listManagers() {
+        return roleService.findByRole(Role.MANAGER.toString());
     }
 
     @GetMapping("/{email}")
@@ -34,7 +34,7 @@ public class ManagerController {
     @PostMapping("/hire")
     public ResponseEntity<?> hireManager(@RequestBody AccountDto accountDto) {
         return ResponseEntity.ok(
-                accountService.register(accountDto, "MANAGER", AccountStatus.ACTIVE));
+                accountService.register(accountDto, Role.MANAGER, AccountStatus.ACTIVE));
     }
 
     @PatchMapping("/{email}/updateStatus")

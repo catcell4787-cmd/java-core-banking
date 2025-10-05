@@ -11,32 +11,36 @@ services:
     restart: always
 
   redis:
-    image: redis:latest
-    container_name: redis_container
-    environment:
-      - REDIS_PASSWORD=1
-      - REDIS_USER=1
-      - REDIS_USER_PASSWORD=1
+    image: redis:alpine
+    container_name: redis
+    restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
-      - ./redisdata:/data
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 256M
-    healthcheck:
-      test: [ "CMD", "redis-cli", "-a", "$REDIS_PASSWORD", "ping" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      - redis-data:/data
+    environment:
+      - INSIGHT_WEB_PORT=8001
+    networks:
+      - redis-network
+    command: [ "redis-server", "--appendonly", "yes" ]
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: redisinsight
     restart: unless-stopped
-    tty: true
-    stdin_open: true
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDISINSIGHT_HOST=0.0.0.0
+      - REDISINSIGHT_ACCEPT_LICENSE=true  # Accept EULA and Privacy Settings
+    ports:
+      - "5540:5540"
+    volumes:
+      - redisinsight-data:/db
+    networks:
+      - redis-network
+    depends_on:
+      - redis
 
   db:
     image: postgres:latest
@@ -73,3 +77,11 @@ services:
 networks:
   postgres:
     driver: bridge
+  redis-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+    driver: local
+  redisinsight-data:
+    driver: local

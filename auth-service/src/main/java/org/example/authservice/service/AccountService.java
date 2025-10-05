@@ -1,6 +1,7 @@
 package org.example.authservice.service;
 
 import org.example.authservice.enums.AccountStatus;
+import org.example.authservice.enums.Role;
 import org.example.authservice.model.dto.AccountCredentialsDto;
 import org.example.authservice.model.dto.AccountDto;
 import org.example.authservice.model.dto.AuthTokenDto;
@@ -15,7 +16,7 @@ public interface AccountService {
 
     AuthTokenDto login(AccountCredentialsDto accountCredentialsDto) throws AuthenticationException;
 
-    ResponseEntity<?> register(AccountDto accountDto, String role, AccountStatus status);
+    ResponseEntity<?> register(AccountDto accountDto, Role role, AccountStatus status);
 
     List<Account> findAll();
 
@@ -25,5 +26,5 @@ public interface AccountService {
 
     Account findByEmail(String email);
 
-    List<AccountDto> findByRole(Set<Object> roles);
+    List<Account> findByRole(String role);
 }

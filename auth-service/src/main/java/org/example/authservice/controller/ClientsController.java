@@ -2,15 +2,16 @@ package org.example.authservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.authservice.enums.AccountStatus;
+import org.example.authservice.enums.Role;
 import org.example.authservice.model.dto.AccountDto;
-import org.example.authservice.repository.RedisRoleRepository;
+import org.example.authservice.model.entity.Account;
 import org.example.authservice.service.AccountService;
+import org.example.authservice.service.RoleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,14 +19,11 @@ import java.util.Set;
 public class ClientsController {
 
     private final AccountService accountService;
-    private final RedisRoleRepository redisRoleRepository;
+    private final RoleService roleService;
 
     @GetMapping("/list")
-    public List<AccountDto> getClients() {
-//        Role role = new Role();
-//        role.setRole("CLIENT");
-//        return accountService.findByRole(Set.of(role));
-        return new ArrayList<>();
+    public List<Account> getClients() {
+        return roleService.findByRole(Role.CLIENT.toString());
     }
 
     @GetMapping("/{email}")
@@ -36,7 +34,7 @@ public class ClientsController {
     @PostMapping("/addClient")
     public ResponseEntity<?> addClient(@RequestBody AccountDto accountDto) {
         return ResponseEntity.ok(
-                accountService.register(accountDto, "CLIENT", AccountStatus.ACTIVE)
+                accountService.register(accountDto, Role.CLIENT, AccountStatus.ACTIVE)
         );
     }
 
