@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.example.authservice.exception.GlobalExceptionHandler;
 import org.example.authservice.model.dto.AuthTokenDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -67,19 +68,9 @@ public class JwtService {
                     .parseSignedClaims(token)
                     .getPayload();
             return true;
-        } catch (ExpiredJwtException expEx) {
-            log.error("Expired JwtException", expEx);
-        } catch (UnsupportedJwtException expEx) {
-            log.error("Unsupported JwtException", expEx);
-        } catch (MalformedJwtException expEx) {
-            log.error("Malformed JwtException", expEx);
-        } catch (SecurityException expEx) {
-            log.error("Security Exception", expEx);
-        } catch (Exception expEx) {
-            log.error("invalid token", expEx);
+        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SecurityException |
+                 io.jsonwebtoken.security.SignatureException expEx) {
+            throw new GlobalExceptionHandler.AuthenticationException("Invalid token");
         }
-        return false;
     }
-
-
 }

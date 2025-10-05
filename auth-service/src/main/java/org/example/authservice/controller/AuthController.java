@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -21,7 +22,7 @@ class AuthController {
     private final AccountService accountService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthTokenDto> signIn(@RequestBody AccountCredentialsDto accountCredentialsDto) {
+    public ResponseEntity<AuthTokenDto> login(@RequestBody AccountCredentialsDto accountCredentialsDto) {
         try {
             AuthTokenDto authTokenDto = accountService.login(accountCredentialsDto);
             return ResponseEntity.ok(authTokenDto);
@@ -37,8 +38,8 @@ class AuthController {
                         accountDto, "CLIENT", AccountStatus.PENDING));
     }
 
-    @GetMapping("/{email}")
-    public Account getAccount(@PathVariable String email) {
-        return accountService.findByEmail(email);
+    @GetMapping("/list")
+    public List<Account> getAccount() {
+        return accountService.findAll();
     }
 }

@@ -5,10 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.example.authservice.enums.AccountStatus;
 
+import java.util.UUID;
+
 @Data
 public class AccountDto {
 
-    private Long id;
+    private UUID id;
 
     @Email(message = "Email syntax is not correct")
     @NotBlank(message = "Enter your email")

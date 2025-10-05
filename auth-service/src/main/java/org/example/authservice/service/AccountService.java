@@ -5,11 +5,11 @@ import org.example.authservice.model.dto.AccountCredentialsDto;
 import org.example.authservice.model.dto.AccountDto;
 import org.example.authservice.model.dto.AuthTokenDto;
 import org.example.authservice.model.entity.Account;
-import org.example.authservice.model.entity.Role;
 import org.springframework.http.ResponseEntity;
 
 import javax.naming.AuthenticationException;
 import java.util.List;
+import java.util.Set;
 
 public interface AccountService {
 
@@ -19,9 +19,11 @@ public interface AccountService {
 
     List<Account> findAll();
 
+    Account findByCredentials(AccountCredentialsDto accountCredentialsDto);
+
     ResponseEntity<?> updateStatus(String email, AccountDto accountDto);
 
     Account findByEmail(String email);
 
-    List<AccountDto> findByRole(List<Role> roles);
+    List<AccountDto> findByRole(Set<Object> roles);
 }

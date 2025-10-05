@@ -1,5 +1,6 @@
 version: '3'
 services:
+
   discovery-service:
     container_name: discovery-service
     build:
@@ -8,26 +9,42 @@ services:
     ports:
       - "8761:8761"
     restart: always
-  config-service:
-    container_name: config-service
-    build:
-      context: .
-      dockerfile: config-service/Dockerfile
+
+  redis:
+    image: redis:latest
+    container_name: redis_container
+    environment:
+      - REDIS_PASSWORD=1
+      - REDIS_USER=1
+      - REDIS_USER_PASSWORD=1
     ports:
-      - "8082:8082"
-    restart: always
-  ssh_server:
-    image: nginx
-    command: /bin/bash -c "apt-get update && apt-get install -y openssh-server && service ssh start && /bin/bash"
-    ports:
-    - "2222:22"
+      - "6379:6379"
+    volumes:
+      - ./redisdata:/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-a", "$REDIS_PASSWORD", "ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
   db:
     image: postgres:latest
     container_name: acc_db
     environment:
+      POSTGRES_DB: acc_db
       POSTGRES_USER: acc
       POSTGRES_PASSWORD: acc
-      POSTGRES_DB: acc_db
     ports:
       - "5432:5432"
     healthcheck:

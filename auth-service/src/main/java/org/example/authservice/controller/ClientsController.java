@@ -3,13 +3,14 @@ package org.example.authservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.authservice.enums.AccountStatus;
 import org.example.authservice.model.dto.AccountDto;
-import org.example.authservice.model.entity.Account;
-import org.example.authservice.model.entity.Role;
+import org.example.authservice.repository.RedisRoleRepository;
 import org.example.authservice.service.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,12 +18,14 @@ import java.util.List;
 public class ClientsController {
 
     private final AccountService accountService;
+    private final RedisRoleRepository redisRoleRepository;
 
     @GetMapping("/list")
     public List<AccountDto> getClients() {
-        Role role = new Role();
-        role.setRole("CLIENT");
-        return accountService.findByRole(List.of(role));
+//        Role role = new Role();
+//        role.setRole("CLIENT");
+//        return accountService.findByRole(Set.of(role));
+        return new ArrayList<>();
     }
 
     @GetMapping("/{email}")

@@ -15,7 +15,7 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="jdbc:postgresql://localhost:5432/acc_db [DEBUG]" group="​AuthServiceApplication" uuid="ba52c117-9846-4480-bd4f-0f32052ae0c6">
+    <data-source source="LOCAL" name="jdbc:postgresql://localhost:5432/acc_db [DEBUG]" group="​AuthServiceApplication" uuid="f5b8b935-c655-4fe1-91f2-e1d953086669">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
