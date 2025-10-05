@@ -15,6 +15,7 @@ import org.example.authservice.service.AccountService;
 import org.example.authservice.service.RoleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,7 @@ public class AccountsServiceImpl implements AccountService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
+    private final KafkaTemplate<String, Account> kafkaTemplate;
 
     @Override
     public ResponseEntity<?> register(AccountDto accountDto, Role role, AccountStatus accountStatus) {
@@ -42,7 +44,8 @@ public class AccountsServiceImpl implements AccountService {
         account.setStatus(accountStatus);
         roleService.saveRole(account.getEmail(), role);
         accountRepository.save(account);
-        log.warn("account registered successfully: {}", account);
+        log.info("Sending : {}", account);
+        kafkaTemplate.send("account_created", account);
         return ResponseEntity.ok(account);
     }
 
