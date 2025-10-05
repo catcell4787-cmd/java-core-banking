@@ -1,7 +1,7 @@
 package org.example.authservice.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.authservice.enums.AccountStatus;
+import org.example.authservice.enums.Status;
 import org.example.authservice.enums.Role;
 import org.example.authservice.model.dto.AccountCredentialsDto;
 import org.example.authservice.model.dto.AccountDto;
@@ -36,7 +36,7 @@ class AuthController {
     public ResponseEntity<?> register(@RequestBody AccountDto accountDto) {
         return ResponseEntity.ok(
                 accountService.register(
-                        accountDto, Role.CLIENT, AccountStatus.PENDING));
+                        accountDto, Role.CLIENT, Status.PENDING));
     }
 
     @GetMapping("/list")

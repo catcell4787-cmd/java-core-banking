@@ -2,7 +2,7 @@ package org.example.authservice.utils;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.example.authservice.enums.AccountStatus;
+import org.example.authservice.enums.Status;
 import org.example.authservice.enums.Role;
 import org.example.authservice.model.entity.Account;
 import org.example.authservice.repository.AccountRepository;
@@ -33,7 +33,7 @@ public class AdminServiceOneAndOnly {
             Account account = new Account();
             account.setEmail(adminEmail);
             account.setPassword(passwordEncoder.encode(adminPassword));
-            account.setStatus(AccountStatus.ACTIVE);
+            account.setStatus(Status.ACTIVE);
             roleService.saveRole(account.getEmail(), Role.ADMIN);
             accountRepository.save(account);
         }

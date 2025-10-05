@@ -2,7 +2,7 @@ package org.example.authservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.authservice.enums.AccountStatus;
+import org.example.authservice.enums.Status;
 import org.example.authservice.enums.Role;
 import org.example.authservice.exception.GlobalExceptionHandler;
 import org.example.authservice.model.dto.AccountCredentialsDto;
@@ -35,13 +35,13 @@ public class AccountsServiceImpl implements AccountService {
     private final KafkaTemplate<String, Account> kafkaTemplate;
 
     @Override
-    public ResponseEntity<?> register(AccountDto accountDto, Role role, AccountStatus accountStatus) {
+    public ResponseEntity<?> register(AccountDto accountDto, Role role, Status status) {
         if (accountRepository.existsByEmail(accountDto.getEmail())) {
             throw new GlobalExceptionHandler.ConflictException("Email already exists");
         }
         Account account = modelMapper.map(accountDto, Account.class);
         account.setPassword(passwordEncoder.encode(account.getPassword()));
-        account.setStatus(accountStatus);
+        account.setStatus(status);
         roleService.saveRole(account.getEmail(), role);
         accountRepository.save(account);
         log.info("Sending : {}", account);

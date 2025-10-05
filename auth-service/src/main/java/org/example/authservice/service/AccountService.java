@@ -1,6 +1,6 @@
 package org.example.authservice.service;
 
-import org.example.authservice.enums.AccountStatus;
+import org.example.authservice.enums.Status;
 import org.example.authservice.enums.Role;
 import org.example.authservice.model.dto.AccountCredentialsDto;
 import org.example.authservice.model.dto.AccountDto;
@@ -15,7 +15,7 @@ public interface AccountService {
 
     AuthTokenDto login(AccountCredentialsDto accountCredentialsDto) throws AuthenticationException;
 
-    ResponseEntity<?> register(AccountDto accountDto, Role role, AccountStatus status);
+    ResponseEntity<?> register(AccountDto accountDto, Role role, Status status);
 
     List<Account> findAll();
 

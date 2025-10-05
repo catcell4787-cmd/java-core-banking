@@ -1,6 +1,6 @@
 package org.example.authservice.enums;
 
-public enum AccountStatus {
+public enum Status {
     ACTIVE,
     INACTIVE,
     PENDING,

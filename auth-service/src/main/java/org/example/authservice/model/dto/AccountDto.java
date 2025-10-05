@@ -3,7 +3,7 @@ package org.example.authservice.model.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import org.example.authservice.enums.AccountStatus;
+import org.example.authservice.enums.Status;
 
 import java.util.UUID;
 
@@ -21,6 +21,6 @@ public class AccountDto {
 
     private String role;
 
-    private AccountStatus status;
+    private Status status;
 
 }

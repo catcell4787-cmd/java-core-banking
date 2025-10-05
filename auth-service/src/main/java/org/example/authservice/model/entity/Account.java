@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import org.example.authservice.enums.AccountStatus;
+import org.example.authservice.enums.Status;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -41,6 +41,6 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private AccountStatus status;
+    private Status status;
 
 }
