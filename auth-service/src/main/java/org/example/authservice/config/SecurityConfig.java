@@ -27,6 +27,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                                         .requestMatchers("/auth/register", "/auth/login").permitAll()
+                                        .requestMatchers("/auth/delete/{email}").hasAuthority("ADMIN")
                                         .requestMatchers("/clients/list").hasAnyAuthority("ADMIN", "MANAGER")
                                         .requestMatchers("/clients/{email}/updateStatus").hasAnyAuthority("ADMIN", "MANAGER")
                                         .requestMatchers("/auth/{email}").hasAnyAuthority("ADMIN", "MANAGER")

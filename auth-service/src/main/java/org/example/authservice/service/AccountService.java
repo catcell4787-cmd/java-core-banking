@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 
 import javax.naming.AuthenticationException;
 import java.util.List;
-import java.util.Set;
 
 public interface AccountService {
 
@@ -27,4 +26,6 @@ public interface AccountService {
     Account findByEmail(String email);
 
     List<Account> findByRole(String role);
+
+    ResponseEntity<?> deleteAccount(String email);
 }

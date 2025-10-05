@@ -6,11 +6,9 @@ import org.example.authservice.enums.Role;
 import org.example.authservice.model.dto.AccountDto;
 import org.example.authservice.model.entity.Account;
 import org.example.authservice.service.AccountService;
-import org.example.authservice.service.RoleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,11 +17,10 @@ import java.util.List;
 public class ManagerController {
 
     private final AccountService accountService;
-    private final RoleService roleService;
 
     @GetMapping("/list")
     public List<Account> listManagers() {
-        return roleService.findByRole(Role.MANAGER.toString());
+        return accountService.findByRole(Role.MANAGER.toString());
     }
 
     @GetMapping("/{email}")

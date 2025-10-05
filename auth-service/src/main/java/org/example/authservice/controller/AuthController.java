@@ -43,4 +43,10 @@ class AuthController {
     public List<Account> getAccount() {
         return accountService.findAll();
     }
+
+    @DeleteMapping("delete/{email}")
+    public ResponseEntity<?> deleteAccount(@PathVariable String email) {
+        accountService.deleteAccount(email);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -1,9 +1,7 @@
 package org.example.authservice.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.example.authservice.enums.Role;
-import org.example.authservice.model.dto.AccountDto;
 import org.example.authservice.model.entity.Account;
 import org.example.authservice.repository.AccountRepository;
 import org.example.authservice.service.RoleService;
@@ -51,5 +49,10 @@ public class RoleServiceImpl implements RoleService {
             }
         }
         return accounts;
+    }
+
+    @Override
+    public void deleteRole(String role) {
+        redisTemplate.delete(role);
     }
 }

@@ -18,7 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -60,6 +61,16 @@ public class AccountsServiceImpl implements AccountService {
     @Override
     public List<Account> findByRole(String role) {
         return roleService.findByRole(role);
+    }
+
+    @Override
+    public ResponseEntity<?> deleteAccount(String email) {
+        if (accountRepository.existsByEmail(email)) {
+            accountRepository.delete(findByEmail(email));
+            roleService.deleteRole(email);
+            return ResponseEntity.ok().body("Account deleted successfully");
+        }
+        throw new GlobalExceptionHandler.ResourceNotFoundException("account with email " + email + " not found");
     }
 
     @Override
