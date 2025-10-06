@@ -1,5 +1,6 @@
 package org.bank.cardsservice.service.impl;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -19,19 +20,17 @@ import org.springframework.stereotype.Service;
 public class CardsServiceImpl implements CardsService {
 
     private final CardsRepository cardsRepository;
+    private final KafkaService kafkaService;
 
     @Override
     @KafkaListener(topics = "register_card", groupId = "cards_group")
-    public void registerCard(String getEmail) {
-        if (cardsRepository.existsByCardHolder(getEmail)) {
-            log.info("This email is already in use : {}", getEmail);
-            throw new GlobalExceptionHandler.ConflictException("Card already exists");
-        }
-        Card card = new Card();
-        card.setCardHolder(getEmail);
-        card.setBalance(0);
-        card.setStatus(Status.PENDING);
-        cardsRepository.save(card);
-        log.info("Card registered successfully : {}", card);
+    public ResponseEntity<?> registerCard(String getEmail) {
+            Card card = new Card();
+            card.setCardHolder(getEmail);
+            card.setBalance(0);
+            card.setStatus(Status.PENDING);
+            cardsRepository.save(card);
+            log.info("Card registered successfully : {}", card);
+            return ResponseEntity.ok(card);
     }
 }

@@ -1,5 +1,6 @@
 package org.bank.authservice.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.bank.authservice.enums.Status;
 import org.bank.authservice.enums.Role;
@@ -33,7 +34,7 @@ class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody AccountDto accountDto) {
+    public ResponseEntity<?> register(@Valid @RequestBody AccountDto accountDto) {
         return ResponseEntity.ok(
                 accountService.register(
                         accountDto, Role.CLIENT, Status.PENDING));
@@ -45,7 +46,7 @@ class AuthController {
     }
 
     @DeleteMapping("delete/{email}")
-    public ResponseEntity<?> deleteAccount(@PathVariable String email) {
+    public ResponseEntity<?> deleteAccount(@Valid @PathVariable String email) {
         accountService.deleteAccount(email);
         return ResponseEntity.ok().build();
     }

@@ -6,7 +6,6 @@ import org.bank.authservice.enums.Role;
 import org.bank.authservice.model.dto.AccountDto;
 import org.bank.authservice.model.entity.Account;
 import org.bank.authservice.service.AccountService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,11 +38,5 @@ public class ClientsController {
     @PatchMapping("/{email}/updateStatus")
     public ResponseEntity<?> updateStatus(@PathVariable String email,  @RequestBody AccountDto accountDto) {
         return ResponseEntity.ok(accountService.updateStatus(email, accountDto));
-    }
-
-    @PostMapping("/{email}/registerCard")
-    public ResponseEntity<?> registerCard(@PathVariable String email, @RequestBody Account account) {
-        accountService.registerCard(email, account);
-        return ResponseEntity.ok("Registration request submitted");
     }
 }

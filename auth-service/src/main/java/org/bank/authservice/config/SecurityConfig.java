@@ -27,11 +27,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                                         .requestMatchers("/auth/register", "/auth/login").permitAll()
-                                        .requestMatchers("/clients/{email}/registerCard").hasAuthority("CLIENT")
+                                        .requestMatchers("/cards/{email}/registerCard").hasAuthority("CLIENT")
                                         .requestMatchers("/auth/delete/{email}").hasAuthority("ADMIN")
                                         .requestMatchers("/clients/list").hasAnyAuthority("ADMIN", "MANAGER")
                                         .requestMatchers("/clients/{email}/updateStatus").hasAnyAuthority("ADMIN", "MANAGER")
-                                        .requestMatchers("/auth/{email}").hasAnyAuthority("ADMIN", "MANAGER")
                                         .requestMatchers("/managers/list", "/managers/{email}/updateStatus", "/managers/hire").hasAuthority("ADMIN")
                                         .requestMatchers("/managers/{email}", "/clients/{email}").hasAnyAuthority("ADMIN", "MANAGER")
                                         .anyRequest().authenticated())

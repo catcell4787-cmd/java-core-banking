@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CardsRepository extends JpaRepository<Card, Long> {
     boolean existsByCardHolder(String cardHolder);
+
+    Card findByCardHolder(String cardHolder);
 }

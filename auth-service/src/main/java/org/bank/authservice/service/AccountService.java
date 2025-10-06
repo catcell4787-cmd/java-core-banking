@@ -30,5 +30,7 @@ public interface AccountService {
 
     ResponseEntity<?> deleteAccount(String email);
 
-    ResponseEntity<?> registerCard(String email, Account account);
+    ResponseEntity<?> registerCard(String email);
+
+    void findCardByEmail(String email);
 }

@@ -1,5 +1,6 @@
 package org.bank.authservice.service.impl;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.protocol.types.Field;
@@ -17,8 +18,10 @@ import org.bank.authservice.service.RoleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +36,7 @@ public class AccountsServiceImpl implements AccountService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
-    private final KafkaProducerServiceImpl kafkaProducerService;
+    private final KafkaService kafkaService;
 
     @Override
     public ResponseEntity<?> register(AccountDto accountDto, Role role, Status status) {
@@ -45,7 +48,6 @@ public class AccountsServiceImpl implements AccountService {
         account.setStatus(status);
         roleService.saveRole(account.getEmail(), role);
         accountRepository.save(account);
-        log.info("Sending : {}", account);
 //        cardEventKafkaTemplate.send("account_created", account);
         return ResponseEntity.ok(account);
     }
@@ -78,10 +80,19 @@ public class AccountsServiceImpl implements AccountService {
     }
 
     @Override
-    public ResponseEntity<?> registerCard(String email, Account account) {
-        account = findByEmail(email);
-        kafkaProducerService.sendEmail(account.getEmail());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> registerCard(String email) {
+            if (accountRepository.existsByEmail(email)) {
+                kafkaService.sendMessage("register_card", email);
+                log.info("Sending : {}", email);
+                return ResponseEntity.ok("Card registration request sent");
+            }
+        throw new GlobalExceptionHandler.ResourceNotFoundException("account with email " + email + " not found");
+    }
+
+    @Override
+    @KafkaListener(topics = "cards_list", groupId = "cards_group")
+    public void findCardByEmail(String email) {
+        kafkaService.sendMessage("cards_list", email);
     }
 
     @Override
