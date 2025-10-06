@@ -5,4 +5,18 @@
       <sourceFolder url="file://$MODULE_DIR$/../../cards-service/build/generated/sources/annotationProcessor/java/main" isTestSource="false" generated="true" />
     </content>
   </component>
+  <component name="FacetManager">
+    <facet type="jpa" name="JPA">
+      <configuration>
+        <setting name="validation-enabled" value="true" />
+        <setting name="provider-name" value="Hibernate" />
+        <datasource-mapping>
+          <factory-entry name="entityManagerFactory" value="5352c3fc-de21-4ba6-8172-b34f98975967" />
+        </datasource-mapping>
+        <naming-strategy-map>
+          <unit-entry name="entityManagerFactory" />
+        </naming-strategy-map>
+      </configuration>
+    </facet>
+  </component>
 </module>

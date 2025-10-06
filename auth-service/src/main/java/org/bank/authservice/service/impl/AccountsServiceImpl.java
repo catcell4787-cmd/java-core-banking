@@ -16,6 +16,7 @@ import org.bank.authservice.service.AccountService;
 import org.bank.authservice.service.RoleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -77,10 +78,10 @@ public class AccountsServiceImpl implements AccountService {
     }
 
     @Override
-    public ResponseEntity<?> registerCard(String email, AccountDto accountDto) {
-        Account account = findByEmail(email);
+    public ResponseEntity<?> registerCard(String email, Account account) {
+        account = findByEmail(email);
         kafkaProducerService.sendEmail(account.getEmail());
-        return ResponseEntity.ok(account);
+        return ResponseEntity.ok().build();
     }
 
     @Override

@@ -42,7 +42,8 @@ public class ClientsController {
     }
 
     @PostMapping("/{email}/registerCard")
-    public ResponseEntity<?> registerCard(@PathVariable String email, @RequestBody AccountDto accountDto) {
-        return new ResponseEntity<>(accountService.registerCard(email, accountDto), HttpStatus.OK);
+    public ResponseEntity<?> registerCard(@PathVariable String email, @RequestBody Account account) {
+        accountService.registerCard(email, account);
+        return ResponseEntity.ok("Registration request submitted");
     }
 }
