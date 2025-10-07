@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface CardsClient {
 
     @GetMapping("/cards/{email}/list")
-    ResponseEntity<CardsDto> getCardsList(@PathVariable("email") String email);
+    ResponseEntity<CardsDto> getCardsList(@PathVariable String email);
 
 }

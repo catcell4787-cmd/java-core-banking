@@ -1,7 +1,7 @@
 package org.bank.authservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.bank.authservice.model.dto.AccountDto;
-import org.bank.authservice.service.AccountService;
+import org.bank.authservice.service.CardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/cards")
 @RequiredArgsConstructor
 public class CardController {
-    private final AccountService accountService;
+    private final CardService cardService;
 
     @PostMapping("/{email}/registerCard")
     public ResponseEntity<?> registerCard(@PathVariable String email) {
-        return ResponseEntity.ok(accountService.registerCard(email));
+        return ResponseEntity.ok(cardService.registerCard(email));
     }
 
     @GetMapping("/{email}/list")
-    public AccountDto getCards(@PathVariable String email) {
-        return accountService.getCard(email);
+    public ResponseEntity<AccountDto> getCards(@PathVariable String email) {
+        return cardService.getCard(email);
     }
 }

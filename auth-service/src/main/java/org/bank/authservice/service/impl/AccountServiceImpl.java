@@ -2,14 +2,12 @@ package org.bank.authservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bank.authservice.client.CardsClient;
 import org.bank.authservice.enums.Role;
 import org.bank.authservice.enums.Status;
 import org.bank.authservice.exception.GlobalExceptionHandler;
 import org.bank.authservice.model.dto.AccountCredentialsDto;
 import org.bank.authservice.model.dto.AccountDto;
 import org.bank.authservice.model.dto.AuthTokenDto;
-import org.bank.authservice.model.dto.CardsDto;
 import org.bank.authservice.model.entity.Account;
 import org.bank.authservice.repository.AccountRepository;
 import org.bank.authservice.security.jwt.JwtService;
@@ -33,8 +31,6 @@ public class AccountServiceImpl implements AccountService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
-    private final KafkaService kafkaService;
-    private final CardsClient cardsClient;
 
     @Override
     public ResponseEntity<?> register(AccountCredentialsDto accountCredentialsDto, Role role, Status status) {
@@ -78,29 +74,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public ResponseEntity<?> registerCard(String email) {
-        if (!accountRepository.existsByEmail(email)) {
-            throw new GlobalExceptionHandler.ResourceNotFoundException("account with email " + email + " not found");
-        }
-        kafkaService.sendMessage("register_card", email);
-        log.info("Sending : {}", email);
-        return ResponseEntity.ok("Card registration request sent");
-
-    }
-
-    @Override
-    public AccountDto getCard(String email) {
-        Optional<Account> optionalAccount = accountRepository.findByEmail(email);
-        if (optionalAccount.isPresent()) {
-            AccountDto accountDto = modelMapper.map(optionalAccount.get(), AccountDto.class);
-            ResponseEntity<CardsDto> cardsResponse = cardsClient.getCardsList(email);
-            accountDto.setCardsDto(cardsResponse.getBody());
-            return accountDto;
-        }
-        throw new GlobalExceptionHandler.ResourceNotFoundException("account with email " + email + " not found");
-    }
-
-    @Override
     public ResponseEntity<?> updateStatus(String email, AccountDto accountDto) {
         Optional<Account> optionalAccount = accountRepository.findByEmail(email);
         if (optionalAccount.isPresent()) {
@@ -128,6 +101,6 @@ public class AccountServiceImpl implements AccountService {
                 throw new GlobalExceptionHandler.AuthenticationException("Invalid password");
             }
         }
-        throw new GlobalExceptionHandler.AuthenticationException("Invalid email");
+        throw new GlobalExceptionHandler.AuthenticationException("Email is not registered");
     }
 }

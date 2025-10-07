@@ -1,7 +1,7 @@
 package org.bank.authservice.service;
 
-import org.bank.authservice.enums.Status;
 import org.bank.authservice.enums.Role;
+import org.bank.authservice.enums.Status;
 import org.bank.authservice.model.dto.AccountCredentialsDto;
 import org.bank.authservice.model.dto.AccountDto;
 import org.bank.authservice.model.dto.AuthTokenDto;
@@ -28,8 +28,4 @@ public interface AccountService {
     List<Account> findByRole(String role);
 
     ResponseEntity<?> deleteAccount(String email);
-
-    ResponseEntity<?> registerCard(String email);
-
-    AccountDto getCard(String email);
 }
