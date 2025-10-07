@@ -68,8 +68,7 @@ public class JwtService {
                     .parseSignedClaims(token)
                     .getPayload();
             return true;
-        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SecurityException |
-                 io.jsonwebtoken.security.SignatureException expEx) {
+        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SecurityException expEx) {
             throw new GlobalExceptionHandler.AuthenticationException("Invalid token");
         }
     }

@@ -1,6 +1,5 @@
 package org.bank.authservice.service;
 
-import org.apache.kafka.common.protocol.types.Field;
 import org.bank.authservice.enums.Status;
 import org.bank.authservice.enums.Role;
 import org.bank.authservice.model.dto.AccountCredentialsDto;
@@ -14,9 +13,9 @@ import java.util.List;
 
 public interface AccountService {
 
-    AuthTokenDto login(AccountCredentialsDto accountCredentialsDto) throws AuthenticationException;
+    ResponseEntity<?> register(AccountCredentialsDto accountCredentialsDto, Role role, Status status);
 
-    ResponseEntity<?> register(AccountDto accountDto, Role role, Status status);
+    AuthTokenDto login(AccountCredentialsDto accountCredentialsDto) throws AuthenticationException;
 
     List<Account> findAll();
 
@@ -24,7 +23,7 @@ public interface AccountService {
 
     ResponseEntity<?> updateStatus(String email, AccountDto accountDto);
 
-    Account findByEmail(String email);
+    ResponseEntity<AccountDto> findByEmail(String email);
 
     List<Account> findByRole(String role);
 
@@ -32,5 +31,5 @@ public interface AccountService {
 
     ResponseEntity<?> registerCard(String email);
 
-    void findCardByEmail(String email);
+    AccountDto getCard(String email);
 }

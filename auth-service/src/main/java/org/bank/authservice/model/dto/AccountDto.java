@@ -23,4 +23,6 @@ public class AccountDto {
 
     private Status status;
 
+    private CardsDto cardsDto;
+
 }

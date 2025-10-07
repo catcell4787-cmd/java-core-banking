@@ -3,6 +3,7 @@ package org.bank.authservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.bank.authservice.enums.Status;
 import org.bank.authservice.enums.Role;
+import org.bank.authservice.model.dto.AccountCredentialsDto;
 import org.bank.authservice.model.dto.AccountDto;
 import org.bank.authservice.model.entity.Account;
 import org.bank.authservice.service.AccountService;
@@ -29,9 +30,9 @@ public class ManagerController {
     }
 
     @PostMapping("/hire")
-    public ResponseEntity<?> hireManager(@RequestBody AccountDto accountDto) {
+    public ResponseEntity<?> hireManager(@RequestBody AccountCredentialsDto accountCredentialsDto) {
         return ResponseEntity.ok(
-                accountService.register(accountDto, Role.MANAGER, Status.ACTIVE));
+                accountService.register(accountCredentialsDto, Role.MANAGER, Status.ACTIVE));
     }
 
     @PatchMapping("/{email}/updateStatus")

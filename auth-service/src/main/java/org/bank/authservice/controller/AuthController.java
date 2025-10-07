@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.bank.authservice.enums.Status;
 import org.bank.authservice.enums.Role;
 import org.bank.authservice.model.dto.AccountCredentialsDto;
-import org.bank.authservice.model.dto.AccountDto;
 import org.bank.authservice.model.dto.AuthTokenDto;
 import org.bank.authservice.model.entity.Account;
 import org.bank.authservice.service.AccountService;
@@ -24,20 +23,20 @@ class AuthController {
     private final AccountService accountService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthTokenDto> login(@RequestBody AccountCredentialsDto accountCredentialsDto) {
+    public ResponseEntity<?> login(@Valid @RequestBody AccountCredentialsDto accountCredentialsDto) {
         try {
             AuthTokenDto authTokenDto = accountService.login(accountCredentialsDto);
             return ResponseEntity.ok(authTokenDto);
         } catch (AuthenticationException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody AccountDto accountDto) {
+    public ResponseEntity<?> register(@Valid @RequestBody AccountCredentialsDto accountCredentialsDto) {
         return ResponseEntity.ok(
                 accountService.register(
-                        accountDto, Role.CLIENT, Status.PENDING));
+                        accountCredentialsDto, Role.CLIENT, Status.PENDING));
     }
 
     @GetMapping("/list")

@@ -3,6 +3,7 @@ package org.bank.authservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.bank.authservice.enums.Status;
 import org.bank.authservice.enums.Role;
+import org.bank.authservice.model.dto.AccountCredentialsDto;
 import org.bank.authservice.model.dto.AccountDto;
 import org.bank.authservice.model.entity.Account;
 import org.bank.authservice.service.AccountService;
@@ -29,9 +30,9 @@ public class ClientsController {
     }
 
     @PostMapping("/addClient")
-    public ResponseEntity<?> addClient(@RequestBody AccountDto accountDto) {
+    public ResponseEntity<?> addClient(@RequestBody AccountCredentialsDto accountCredentialsDto) {
         return ResponseEntity.ok(
-                accountService.register(accountDto, Role.CLIENT, Status.ACTIVE)
+                accountService.register(accountCredentialsDto, Role.CLIENT, Status.ACTIVE)
         );
     }
 

@@ -31,14 +31,6 @@ public class Account {
     @CreationTimestamp
     private LocalDateTime registered;
 
-//    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-//    @JoinTable(
-//            name = "account_role",
-//            joinColumns = @JoinColumn(name = "account_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id")
-//    )
-//    private List<Role> role;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;

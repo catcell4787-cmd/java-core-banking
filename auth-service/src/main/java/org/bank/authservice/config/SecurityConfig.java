@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                                         .requestMatchers("/auth/register", "/auth/login").permitAll()
-                                        .requestMatchers("/cards/{email}/registerCard").hasAuthority("CLIENT")
+                                        .requestMatchers("/cards/{email}/registerCard", "/cards/{email}/list").hasAuthority("CLIENT")
                                         .requestMatchers("/auth/delete/{email}").hasAuthority("ADMIN")
                                         .requestMatchers("/clients/list").hasAnyAuthority("ADMIN", "MANAGER")
                                         .requestMatchers("/clients/{email}/updateStatus").hasAnyAuthority("ADMIN", "MANAGER")
