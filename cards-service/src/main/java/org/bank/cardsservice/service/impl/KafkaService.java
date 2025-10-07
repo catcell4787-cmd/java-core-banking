@@ -1,7 +1,6 @@
 package org.bank.cardsservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.bank.cardsservice.model.Card;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 

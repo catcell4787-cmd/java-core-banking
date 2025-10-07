@@ -10,6 +10,6 @@ public class AccountDto {
     private String email;
     private String role;
     private Status status;
-    private CardsDto cardsDto;
+    private CardDto cards;
 
 }

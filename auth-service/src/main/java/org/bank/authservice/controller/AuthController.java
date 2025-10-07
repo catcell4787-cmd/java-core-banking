@@ -2,13 +2,11 @@ package org.bank.authservice.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.bank.authservice.enums.Status;
 import org.bank.authservice.enums.Role;
+import org.bank.authservice.enums.Status;
 import org.bank.authservice.model.dto.AccountCredentialsDto;
-import org.bank.authservice.model.dto.AuthTokenDto;
 import org.bank.authservice.model.entity.Account;
 import org.bank.authservice.service.AccountService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,20 +21,13 @@ class AuthController {
     private final AccountService accountService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody AccountCredentialsDto accountCredentialsDto) {
-        try {
-            AuthTokenDto authTokenDto = accountService.login(accountCredentialsDto);
-            return ResponseEntity.ok(authTokenDto);
-        } catch (AuthenticationException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
-        }
+    public ResponseEntity<?> login(@Valid @RequestBody AccountCredentialsDto accountCredentialsDto) throws AuthenticationException {
+        return ResponseEntity.ok(accountService.login(accountCredentialsDto));
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody AccountCredentialsDto accountCredentialsDto) {
-        return ResponseEntity.ok(
-                accountService.register(
-                        accountCredentialsDto, Role.CLIENT, Status.PENDING));
+        return ResponseEntity.ok(accountService.register(accountCredentialsDto, Role.CLIENT, Status.PENDING));
     }
 
     @GetMapping("/list")

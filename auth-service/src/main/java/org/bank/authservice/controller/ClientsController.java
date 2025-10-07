@@ -1,5 +1,6 @@
 package org.bank.authservice.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.bank.authservice.enums.Role;
 import org.bank.authservice.enums.Status;
@@ -25,19 +26,19 @@ public class ClientsController {
     }
 
     @GetMapping("/{email}")
-    public ResponseEntity<?> getClient(@PathVariable String email) {
+    public ResponseEntity<?> getClient(@Valid @PathVariable String email) {
         return ResponseEntity.ok(accountService.findByEmail(email));
     }
 
     @PostMapping("/addClient")
-    public ResponseEntity<?> addClient(@RequestBody AccountCredentialsDto accountCredentialsDto) {
+    public ResponseEntity<?> addClient(@Valid @RequestBody AccountCredentialsDto accountCredentialsDto) {
         return ResponseEntity.ok(
                 accountService.register(accountCredentialsDto, Role.CLIENT, Status.ACTIVE)
         );
     }
 
     @PatchMapping("/{email}/updateStatus")
-    public ResponseEntity<?> updateStatus(@PathVariable String email,  @RequestBody AccountDto accountDto) {
+    public ResponseEntity<?> updateStatus(@PathVariable String email, @Valid @RequestBody AccountDto accountDto) {
         return ResponseEntity.ok(accountService.updateStatus(email, accountDto));
     }
 }

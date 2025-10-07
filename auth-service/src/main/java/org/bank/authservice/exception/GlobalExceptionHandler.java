@@ -3,8 +3,7 @@ package org.bank.authservice.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -18,9 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
-
-    Logger logger = LogManager.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ErrorData> handleConflictException(ConflictException ex, HttpServletRequest request) {
@@ -28,7 +26,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.CONFLICT.value(),
                 ex.getMessage(),
                 request.getRequestURI());
-        logger.error(errorData.toString());
+        log.error(errorData.toString());
         return new ResponseEntity<>(errorData, HttpStatus.CONFLICT);
     }
 
@@ -38,7 +36,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND.value(),
                 ex.getMessage(),
                 request.getRequestURI());
-        logger.error(errorData.toString());
+        log.error(errorData.toString());
         return new ResponseEntity<>(errorData, HttpStatus.NOT_FOUND);
     }
 
@@ -62,8 +60,20 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 request.getRequestURI()
         );
-        logger.error(errorData.toString());
+        log.error(errorData.toString());
         return new ResponseEntity<>(errorData, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AccountStatusException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<ErrorData> handleAccountStatusExceptionException(AccountStatusException ex, HttpServletRequest request) {
+        ErrorData errorData = new ErrorData(
+                HttpStatus.FORBIDDEN.value(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        log.error(errorData.toString());
+        return new ResponseEntity<>(errorData, HttpStatus.FORBIDDEN);
     }
 
     @Data
@@ -115,6 +125,12 @@ public class GlobalExceptionHandler {
 
     public static class AuthenticationException extends RuntimeException {
         public AuthenticationException(String message) {
+            super(message);
+        }
+    }
+
+    public static class AccountStatusException extends RuntimeException {
+        public AccountStatusException(String message) {
             super(message);
         }
     }

@@ -3,10 +3,7 @@ package org.bank.cardsservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.bank.cardsservice.model.dto.CardDto;
 import org.bank.cardsservice.service.CardService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,5 +15,10 @@ public class CardController {
     @GetMapping("/{email}/list")
     public CardDto getCards(@PathVariable String email) {
         return cardService.getCard(email);
+    }
+
+    @PostMapping("/{email}/registerCard")
+    public CardDto registerCard(@PathVariable String email) {
+        return cardService.registerCard(email);
     }
 }

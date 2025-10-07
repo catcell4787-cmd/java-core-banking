@@ -19,13 +19,11 @@ public interface AccountService {
 
     List<Account> findAll();
 
-    Account findByCredentials(AccountCredentialsDto accountCredentialsDto);
-
     ResponseEntity<?> updateStatus(String email, AccountDto accountDto);
 
     ResponseEntity<AccountDto> findByEmail(String email);
 
     List<Account> findByRole(String role);
 
-    ResponseEntity<?> deleteAccount(String email);
+    void deleteAccount(String email);
 }

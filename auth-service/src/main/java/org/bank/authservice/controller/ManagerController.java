@@ -1,5 +1,6 @@
 package org.bank.authservice.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.bank.authservice.enums.Role;
 import org.bank.authservice.enums.Status;
@@ -30,13 +31,13 @@ public class ManagerController {
     }
 
     @PostMapping("/hire")
-    public ResponseEntity<?> hireManager(@RequestBody AccountCredentialsDto accountCredentialsDto) {
+    public ResponseEntity<?> hireManager(@RequestBody @Valid AccountCredentialsDto accountCredentialsDto) {
         return ResponseEntity.ok(
                 accountService.register(accountCredentialsDto, Role.MANAGER, Status.ACTIVE));
     }
 
     @PatchMapping("/{email}/updateStatus")
-    public ResponseEntity<?> updateStatus(@PathVariable String email,  @RequestBody AccountDto accountDto) {
+    public ResponseEntity<?> updateStatus(@PathVariable String email, @Valid @RequestBody AccountDto accountDto) {
         return ResponseEntity.ok(
                 accountService.updateStatus(email, accountDto));
     }

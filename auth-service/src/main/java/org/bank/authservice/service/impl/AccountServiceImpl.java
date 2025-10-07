@@ -57,7 +57,7 @@ public class AccountServiceImpl implements AccountService {
             AccountDto accountDto = modelMapper.map(optionalAccount.get(), AccountDto.class);
             return ResponseEntity.ok(accountDto);
         }
-        throw new GlobalExceptionHandler.ResourceNotFoundException("account with email " + email + " not found");
+        throw new GlobalExceptionHandler.ResourceNotFoundException("Account with email " + email + " not found");
     }
 
     @Override
@@ -66,11 +66,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public ResponseEntity<?> deleteAccount(String email) {
+    public void deleteAccount(String email) {
         Account account = accountRepository.findByEmail(email).orElseThrow();
         accountRepository.delete(account);
         roleService.deleteRole(email);
-        return ResponseEntity.ok().body("Account deleted successfully");
     }
 
     @Override
@@ -86,17 +85,11 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AuthTokenDto login(AccountCredentialsDto accountCredentialsDto) {
-        Account account = findByCredentials(accountCredentialsDto);
-        return jwtService.generateAuthToken(account.getEmail());
-    }
-
-    @Override
-    public Account findByCredentials(AccountCredentialsDto accountCredentialsDto) {
         Optional<Account> optionalAccount = accountRepository.findByEmail(accountCredentialsDto.getEmail());
         if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
             if (passwordEncoder.matches(accountCredentialsDto.getPassword(), account.getPassword())) {
-                return account;
+                return jwtService.generateAuthToken(account.getEmail());
             } else {
                 throw new GlobalExceptionHandler.AuthenticationException("Invalid password");
             }

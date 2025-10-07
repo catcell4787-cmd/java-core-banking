@@ -6,9 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.bank.authservice.client.CardsClient;
 import org.bank.authservice.exception.GlobalExceptionHandler;
 import org.bank.authservice.model.dto.AccountDto;
-import org.bank.authservice.model.dto.CardsDto;
+import org.bank.authservice.model.dto.CardDto;
 import org.bank.authservice.model.entity.Account;
 import org.bank.authservice.repository.AccountRepository;
+import org.bank.authservice.service.AccountService;
 import org.bank.authservice.service.CardService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,11 @@ public class CardServiceImpl implements CardService {
         }
         kafkaService.sendMessage("register_card", email);
         log.info("Sending : {}", email);
+        try {
+            cardsClient.registerCard(email);
+        } catch (FeignException e) {
+            throw new GlobalExceptionHandler.ConflictException("card already registered");
+        }
         return ResponseEntity.ok("Card registration request sent");
 
     }
@@ -43,8 +49,8 @@ public class CardServiceImpl implements CardService {
         if (optionalAccount.isPresent()) {
             AccountDto accountDto = modelMapper.map(optionalAccount.get(), AccountDto.class);
             try {
-                ResponseEntity<CardsDto> cardsResponse = cardsClient.getCardsList(email);
-                accountDto.setCardsDto(cardsResponse.getBody());
+                ResponseEntity<CardDto> cardsResponse = cardsClient.getCardsList(email);
+                accountDto.setCards(cardsResponse.getBody());
                 return ResponseEntity.ok(accountDto);
             } catch (FeignException e) {
                 throw new GlobalExceptionHandler.ResourceNotFoundException("Card is not registered");

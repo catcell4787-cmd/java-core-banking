@@ -3,9 +3,10 @@ package org.bank.authservice.model.dto;
 import lombok.Data;
 
 @Data
-public class CardsDto {
+public class CardDto {
 
     private String cardHolder;
     private String cardNumber;
-    private String balance;
+    private String cardBalance;
+    private String cardStatus;
 }

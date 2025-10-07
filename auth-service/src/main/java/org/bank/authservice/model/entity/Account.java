@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.bank.authservice.enums.Status;
+import org.bank.authservice.exception.GlobalExceptionHandler;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;

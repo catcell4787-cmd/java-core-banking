@@ -7,14 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.bank.authservice.exception.GlobalExceptionHandler;
 import org.bank.authservice.model.dto.AuthTokenDto;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
-@Component
+@Service
 @Slf4j
 public class JwtService {
 
@@ -69,7 +69,7 @@ public class JwtService {
                     .getPayload();
             return true;
         } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SecurityException expEx) {
-            throw new GlobalExceptionHandler.AuthenticationException("Invalid token");
+            throw new GlobalExceptionHandler.AuthenticationException(expEx.getMessage());
         }
     }
 }
