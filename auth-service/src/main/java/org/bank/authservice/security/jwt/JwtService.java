@@ -28,6 +28,12 @@ public class JwtService {
         return jwtDto;
     }
 
+    public String getRefreshToken(String email) {
+        AuthTokenDto jwtDto = new AuthTokenDto();
+        jwtDto.setRefreshToken(generateRefreshToken(email));
+        return generateRefreshToken(email);
+    }
+
     private String generateJwtToken(String email) {
         Date date = Date.from(LocalDateTime.now().plusHours(1).atZone(ZoneId.systemDefault()).toInstant());
         return Jwts.builder()

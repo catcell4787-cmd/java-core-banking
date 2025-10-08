@@ -92,7 +92,8 @@ public class AccountServiceImpl implements AccountService {
                 throw new GlobalExceptionHandler.AccountStatusException("Account is not enabled");
             }
             if (passwordEncoder.matches(accountCredentialsDto.getPassword(), account.getPassword())) {
-                log.info("tokens: {}", jwtService.generateAuthToken(account.getEmail()));
+//                log.info("tokens: {}", jwtService.generateAuthToken(account.getEmail()));
+                log.info("token : {}", jwtService.getRefreshToken(account.getEmail()));
                 return ResponseEntity.ok("Logged in successfully");
             } else {
                 throw new GlobalExceptionHandler.AuthenticationException("Invalid password");
