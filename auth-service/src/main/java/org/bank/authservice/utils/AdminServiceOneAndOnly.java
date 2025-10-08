@@ -2,7 +2,6 @@ package org.bank.authservice.utils;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.bank.authservice.enums.Status;
 import org.bank.authservice.enums.Role;
 import org.bank.authservice.model.entity.Account;
 import org.bank.authservice.repository.AccountRepository;
@@ -33,7 +32,7 @@ public class AdminServiceOneAndOnly {
             Account account = new Account();
             account.setEmail(adminEmail);
             account.setPassword(passwordEncoder.encode(adminPassword));
-            account.setStatus(Status.ACTIVE);
+            account.setEnabled(true);
             roleService.saveRole(account.getEmail(), Role.ADMIN);
             accountRepository.save(account);
         }

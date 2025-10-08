@@ -9,7 +9,6 @@ import org.bank.authservice.model.dto.AccountDto;
 import org.bank.authservice.model.dto.CardDto;
 import org.bank.authservice.model.entity.Account;
 import org.bank.authservice.repository.AccountRepository;
-import org.bank.authservice.service.AccountService;
 import org.bank.authservice.service.CardService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +36,7 @@ public class CardServiceImpl implements CardService {
         try {
             cardsClient.registerCard(email);
         } catch (FeignException e) {
-            throw new GlobalExceptionHandler.ConflictException("card already registered");
+            throw new GlobalExceptionHandler.ConflictException("Card is already registered");
         }
         return ResponseEntity.ok("Card registration request sent");
 

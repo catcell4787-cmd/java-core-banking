@@ -3,11 +3,9 @@ package org.bank.authservice.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bank.authservice.enums.Role;
-import org.bank.authservice.enums.Status;
 import org.bank.authservice.exception.GlobalExceptionHandler;
 import org.bank.authservice.model.dto.AccountCredentialsDto;
 import org.bank.authservice.model.dto.AccountDto;
-import org.bank.authservice.model.dto.AuthTokenDto;
 import org.bank.authservice.model.entity.Account;
 import org.bank.authservice.repository.AccountRepository;
 import org.bank.authservice.security.jwt.JwtService;
@@ -33,13 +31,13 @@ public class AccountServiceImpl implements AccountService {
     private final RoleService roleService;
 
     @Override
-    public ResponseEntity<?> register(AccountCredentialsDto accountCredentialsDto, Role role, Status status) {
+    public ResponseEntity<?> register(AccountCredentialsDto accountCredentialsDto, Role role, boolean status) {
         if (accountRepository.existsByEmail(accountCredentialsDto.getEmail())) {
             throw new GlobalExceptionHandler.ConflictException("Email already exists");
         }
         Account account = modelMapper.map(accountCredentialsDto, Account.class);
         account.setPassword(passwordEncoder.encode(account.getPassword()));
-        account.setStatus(status);
+        account.setEnabled(status);
         roleService.saveRole(account.getEmail(), role);
         accountRepository.save(account);
         return ResponseEntity.ok("Account created successfully");
@@ -77,19 +75,25 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> optionalAccount = accountRepository.findByEmail(email);
         if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
-            account.setStatus(accountDto.getStatus());
-            return ResponseEntity.ok(accountRepository.save(account));
+            account.setEnabled(accountDto.isEnabled());
+            accountRepository.save(account);
+            accountDto = modelMapper.map(optionalAccount.get(), AccountDto.class);
+            return ResponseEntity.ok(accountDto);
         }
         throw new GlobalExceptionHandler.ResourceNotFoundException("account with email " + email + " not found");
     }
 
     @Override
-    public AuthTokenDto login(AccountCredentialsDto accountCredentialsDto) {
+    public ResponseEntity<?> login(AccountCredentialsDto accountCredentialsDto) {
         Optional<Account> optionalAccount = accountRepository.findByEmail(accountCredentialsDto.getEmail());
         if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
+            if (!account.isEnabled()) {
+                throw new GlobalExceptionHandler.AccountStatusException("Account is not enabled");
+            }
             if (passwordEncoder.matches(accountCredentialsDto.getPassword(), account.getPassword())) {
-                return jwtService.generateAuthToken(account.getEmail());
+                log.info("tokens: {}", jwtService.generateAuthToken(account.getEmail()));
+                return ResponseEntity.ok("Logged in successfully");
             } else {
                 throw new GlobalExceptionHandler.AuthenticationException("Invalid password");
             }

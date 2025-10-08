@@ -1,10 +1,8 @@
 package org.bank.authservice.service;
 
 import org.bank.authservice.enums.Role;
-import org.bank.authservice.enums.Status;
 import org.bank.authservice.model.dto.AccountCredentialsDto;
 import org.bank.authservice.model.dto.AccountDto;
-import org.bank.authservice.model.dto.AuthTokenDto;
 import org.bank.authservice.model.entity.Account;
 import org.springframework.http.ResponseEntity;
 
@@ -13,9 +11,9 @@ import java.util.List;
 
 public interface AccountService {
 
-    ResponseEntity<?> register(AccountCredentialsDto accountCredentialsDto, Role role, Status status);
+    ResponseEntity<?> register(AccountCredentialsDto accountCredentialsDto, Role role, boolean status);
 
-    AuthTokenDto login(AccountCredentialsDto accountCredentialsDto) throws AuthenticationException;
+    ResponseEntity<?> login(AccountCredentialsDto accountCredentialsDto) throws AuthenticationException;
 
     List<Account> findAll();
 

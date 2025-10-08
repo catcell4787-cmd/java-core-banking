@@ -9,7 +9,6 @@ import org.bank.cardsservice.model.entity.Card;
 import org.bank.cardsservice.repository.CardRepository;
 import org.bank.cardsservice.service.CardService;
 import org.modelmapper.ModelMapper;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,7 +25,7 @@ public class CardServiceImpl implements CardService {
 //    @KafkaListener(topics = "register_card", groupId = "cards_group")
     public CardDto registerCard(String getEmail) {
         if (cardRepository.existsByCardHolder(getEmail)) {
-            throw new GlobalExceptionHandler.ConflictException("Card already exists");
+            throw new GlobalExceptionHandler.ConflictException("Card is already registered");
         }
             Card card = new Card();
             card.setCardHolder(getEmail);

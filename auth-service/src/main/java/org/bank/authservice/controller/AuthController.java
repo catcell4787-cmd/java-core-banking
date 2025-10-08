@@ -3,7 +3,6 @@ package org.bank.authservice.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.bank.authservice.enums.Role;
-import org.bank.authservice.enums.Status;
 import org.bank.authservice.model.dto.AccountCredentialsDto;
 import org.bank.authservice.model.entity.Account;
 import org.bank.authservice.service.AccountService;
@@ -27,7 +26,7 @@ class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody AccountCredentialsDto accountCredentialsDto) {
-        return ResponseEntity.ok(accountService.register(accountCredentialsDto, Role.CLIENT, Status.PENDING));
+        return ResponseEntity.ok(accountService.register(accountCredentialsDto, Role.CLIENT, false));
     }
 
     @GetMapping("/list")

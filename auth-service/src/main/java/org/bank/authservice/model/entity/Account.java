@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import org.bank.authservice.enums.Status;
-import org.bank.authservice.exception.GlobalExceptionHandler;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -31,8 +29,6 @@ public class Account {
     @CreationTimestamp
     private LocalDateTime registered;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private Status status;
-
+    private boolean enabled;
 }
