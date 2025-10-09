@@ -3,7 +3,6 @@ package org.bank.loansservice.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -16,9 +15,6 @@ public class Loan {
 
     @Column(name = "card_holder")
     private String cardHolder;
-
-    @Column(name = "card_number")
-    private String cardNumber;
 
     @Column(name = "amount")
     private double amount;                  // Сумма кредита

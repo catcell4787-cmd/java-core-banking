@@ -5,4 +5,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface LoansService {
     ResponseEntity<?> createLoan(String email, LoanDTO loanDTO);
+
+    ResponseEntity<?> getLoan(String email);
 }

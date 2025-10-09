@@ -4,8 +4,11 @@ package org.bank.loansservice.repository;
 import org.bank.loansservice.model.entity.Loan;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface LoansRepository extends JpaRepository<Loan, Long> {
-    boolean findByCardNumber(String cardNumber);
+import java.util.Optional;
 
-    boolean existsByCardNumber(String cardNumber);
+public interface LoansRepository extends JpaRepository<Loan, Long> {
+
+    boolean existsByCardHolder(String cardHolder);
+
+    Optional<Loan> findByCardHolder(String cardHolder);
 }

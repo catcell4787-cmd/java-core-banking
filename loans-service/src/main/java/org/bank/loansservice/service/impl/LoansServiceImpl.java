@@ -9,6 +9,8 @@ import org.bank.loansservice.service.LoansService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class LoansServiceImpl implements LoansService {
@@ -18,12 +20,11 @@ public class LoansServiceImpl implements LoansService {
 
     @Override
     public LoanDTO createLoan(String email, LoanDTO loanDTO) {
-        if (loansRepository.existsByCardNumber(loanDTO.getCardNumber())) {
+        if (loansRepository.existsByCardHolder(email)) {
             throw new GlobalExceptionHandler.ConflictException("You have active loans");
         }
         Loan loan = new Loan();
         loan.setCardHolder(email);
-        loan.setCardNumber(loanDTO.getCardNumber());
         loan.setAmount(loanDTO.getAmount());
         loan.setTermInMonths(loanDTO.getTermInMonths());
         loansRepository.save(loan);
@@ -32,6 +33,10 @@ public class LoansServiceImpl implements LoansService {
 
     @Override
     public LoanDTO getLoan(String email) {
-        return null;
+        Optional<Loan> loan = loansRepository.findByCardHolder(email);
+        if (loan.isPresent()) {
+            return modelMapper.map(loan.get(), LoanDTO.class);
+        }
+        throw new GlobalExceptionHandler.ResourceNotFoundException("You have no any loans registered");
     }
 }
