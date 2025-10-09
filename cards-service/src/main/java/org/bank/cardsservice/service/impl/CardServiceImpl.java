@@ -38,9 +38,9 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public CardDto getCard(String email) {
-        Optional<Card> card = cardRepository.findByCardHolder(email);
-        if (card.isPresent()) {
-            return modelMapper.map(card.get(), CardDto.class);
+        Optional<Card> optionalCard = cardRepository.findByCardHolder(email);
+        if (optionalCard.isPresent()) {
+            return modelMapper.map(optionalCard.get(), CardDto.class);
         }
         throw new GlobalExceptionHandler.ResourceNotFoundException("You have no any cards registered");
     }

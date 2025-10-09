@@ -6,10 +6,12 @@ import org.bank.authservice.common.loans.dto.LoanDTO;
 
 
 @Data
-public class AccountDTO {
+public class FullDataAccountDTO {
 
     private String email;
     private String role;
     private boolean enabled;
+    private CardDTO cards;
+    private LoanDTO loans;
 
 }

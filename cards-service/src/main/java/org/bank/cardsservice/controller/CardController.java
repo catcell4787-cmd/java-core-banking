@@ -12,7 +12,7 @@ public class CardController {
 
     private final CardService cardService;
 
-    @GetMapping("/{email}/list")
+    @GetMapping("/{email}/getCards")
     public CardDto getCards(@PathVariable String email) {
         return cardService.getCard(email);
     }

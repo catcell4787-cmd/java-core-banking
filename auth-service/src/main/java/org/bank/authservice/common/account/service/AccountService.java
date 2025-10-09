@@ -1,5 +1,6 @@
 package org.bank.authservice.common.account.service;
 
+import org.bank.authservice.common.account.dto.FullDataAccountDTO;
 import org.bank.authservice.enums.Role;
 import org.bank.authservice.common.account.dto.AccountCredentialsDTO;
 import org.bank.authservice.common.account.dto.AccountDTO;
@@ -19,7 +20,7 @@ public interface AccountService {
 
     ResponseEntity<?> updateStatus(String email, AccountDTO accountDto);
 
-    ResponseEntity<AccountDTO> findByEmail(String email);
+    FullDataAccountDTO findByEmail(String email);
 
     List<Account> findByRole(String role);
 

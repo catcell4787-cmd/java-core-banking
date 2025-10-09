@@ -33,9 +33,9 @@ public class LoansServiceImpl implements LoansService {
 
     @Override
     public LoanDTO getLoan(String email) {
-        Optional<Loan> loan = loansRepository.findByCardHolder(email);
-        if (loan.isPresent()) {
-            return modelMapper.map(loan.get(), LoanDTO.class);
+        Optional<Loan> optionalLoan = loansRepository.findByCardHolder(email);
+        if (optionalLoan.isPresent()) {
+            return modelMapper.map(optionalLoan.get(), LoanDTO.class);
         }
         throw new GlobalExceptionHandler.ResourceNotFoundException("You have no any loans registered");
     }

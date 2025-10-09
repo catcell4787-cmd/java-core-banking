@@ -15,13 +15,19 @@ public class RoleMappingAspect {
 
     private final RoleService roleService;
 
-    @AfterReturning(pointcut = "execution(* org.bank.authservice.common.account.dto.AccountDTO+.new(..)) || execution(* org.bank.authservice.common.account.dto.AccountDTO+.*(..))", returning = "accountDTO")
+    @AfterReturning(
+            pointcut = "execution(* *(..)) && args(accountDTO)",
+            returning = "accountDTO",
+            argNames = "joinPoint,accountDTO")
     public void setRoleInUserDto(JoinPoint joinPoint, AccountDTO accountDTO) {
         if (accountDTO != null) {
             // Получаем роль из Redis по ID пользователя
             String role = roleService.getRoleForUser(accountDTO.getEmail()).toString();
             accountDTO.setRole(role); // Устанавливаем роль в DTO
         }
+        System.out.println("Mapped role for object returned by method: "
+                + joinPoint.getSignature().getDeclaringType()
+                + "." + joinPoint.getSignature().getName());
     }
 
 }

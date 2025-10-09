@@ -42,7 +42,7 @@ public class LoansServiceImpl implements LoansService {
                 ResponseEntity<LoanDTO> loansResponse = loansFeignClient.getLoanByCardHolder(email);
                 return ResponseEntity.ok(loansResponse.getBody());
             } catch (FeignException e) {
-                throw new GlobalExceptionHandler.ConflictException(e.getMessage());
+                throw new GlobalExceptionHandler.ResourceNotFoundException(e.getMessage());
             }
         }
         throw new GlobalExceptionHandler.ResourceNotFoundException("Account with email " + email + " not found");

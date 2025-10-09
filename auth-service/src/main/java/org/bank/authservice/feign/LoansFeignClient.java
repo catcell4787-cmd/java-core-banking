@@ -14,6 +14,6 @@ public interface LoansFeignClient {
     @PostMapping("/loans/{email}/createLoan")
     ResponseEntity<LoanDTO> createLoan(@PathVariable String email, @RequestBody LoanDTO loanDTO);
 
-    @GetMapping("/loans/{email}/loans")
+    @GetMapping("/loans/{email}/getLoans")
     ResponseEntity<LoanDTO> getLoanByCardHolder(@PathVariable String email);
 }

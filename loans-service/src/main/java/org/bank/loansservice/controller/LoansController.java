@@ -18,7 +18,7 @@ public class LoansController {
         return ResponseEntity.ok(loansService.createLoan(email, loanDTO));
     }
 
-    @GetMapping("/{email}/loans")
+    @GetMapping("/{email}/getLoans")
     public ResponseEntity<?> getLoans(@PathVariable String email) {
         return ResponseEntity.ok(loansService.getLoan(email));
     }

@@ -2,6 +2,7 @@ package org.bank.authservice.common.account.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bank.authservice.common.account.dto.FullDataAccountDTO;
 import org.bank.authservice.enums.Role;
 import org.bank.authservice.common.account.redis.service.RoleService;
 import org.bank.authservice.exception.GlobalExceptionHandler;
@@ -49,11 +50,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public ResponseEntity<AccountDTO> findByEmail(String email) {
+    public FullDataAccountDTO findByEmail(String email) {
         Optional<Account> optionalAccount = accountRepository.findByEmail(email);
         if (optionalAccount.isPresent()) {
-            AccountDTO accountDto = modelMapper.map(optionalAccount.get(), AccountDTO.class);
-            return ResponseEntity.ok(accountDto);
+            return modelMapper.map(optionalAccount.get(), FullDataAccountDTO.class);
         }
         throw new GlobalExceptionHandler.ResourceNotFoundException("Account with email " + email + " not found");
     }

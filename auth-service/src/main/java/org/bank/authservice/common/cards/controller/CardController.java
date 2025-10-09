@@ -15,8 +15,8 @@ public class CardController {
         return ResponseEntity.ok(cardService.registerCard(email));
     }
 
-    @GetMapping("/{email}/list")
+    @GetMapping("/{email}/getCards")
     public ResponseEntity<?> getCards(@PathVariable String email) {
-        return cardService.getCard(email);
+        return ResponseEntity.ok(cardService.getCard(email));
     }
 }

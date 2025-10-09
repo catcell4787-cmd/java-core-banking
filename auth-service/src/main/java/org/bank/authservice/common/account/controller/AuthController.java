@@ -29,6 +29,11 @@ class AuthController {
         return ResponseEntity.ok(accountService.register(accountCredentialsDto, Role.CLIENT, false));
     }
 
+    @GetMapping("/{email}")
+    public ResponseEntity<?> getAccount(@PathVariable String email) {
+        return ResponseEntity.ok(accountService.findByEmail(email));
+    }
+
     @GetMapping("/list")
     public List<Account> getAccount() {
         return accountService.findAll();

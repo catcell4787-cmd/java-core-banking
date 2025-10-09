@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 @FeignClient(name = "cards-service", url = "http://localhost:8082")
 public interface CardsFeignClient {
 
-    @GetMapping("/cards/{email}/list")
-    ResponseEntity<CardDTO> getCardsList(@PathVariable String email);
+    @GetMapping("/cards/{email}/getCards")
+    ResponseEntity<CardDTO> getCardByCardHolder(@PathVariable String email);
 
     @PostMapping("/cards/{email}/registerCard")
     ResponseEntity<CardDTO> registerCard(@PathVariable String email);
