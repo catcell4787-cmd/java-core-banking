@@ -5,13 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bank.authservice.feign.CardsFeignClient;
 import org.bank.authservice.exception.GlobalExceptionHandler;
-import org.bank.authservice.common.account.dto.AccountDTO;
 import org.bank.authservice.common.cards.dto.CardDTO;
 import org.bank.authservice.common.account.entity.Account;
 import org.bank.authservice.common.account.repository.AccountRepository;
 import org.bank.authservice.common.cards.service.CardService;
 import org.bank.authservice.kafka.KafkaService;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +22,6 @@ public class CardServiceImpl implements CardService {
 
     private final AccountRepository accountRepository;
     private final KafkaService kafkaService;
-    private final ModelMapper modelMapper;
     private final CardsFeignClient cardsFeignClient;
 
     @Override
@@ -44,14 +41,12 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public ResponseEntity<AccountDTO> getCard(String email) {
+    public ResponseEntity<?> getCard(String email) {
         Optional<Account> optionalAccount = accountRepository.findByEmail(email);
         if (optionalAccount.isPresent()) {
-            AccountDTO accountDto = modelMapper.map(optionalAccount.get(), AccountDTO.class);
             try {
                 ResponseEntity<CardDTO> cardsResponse = cardsFeignClient.getCardsList(email);
-                accountDto.setCards(cardsResponse.getBody());
-                return ResponseEntity.ok(accountDto);
+                return ResponseEntity.ok(cardsResponse.getBody());
             } catch (FeignException e) {
                 throw new GlobalExceptionHandler.ResourceNotFoundException("Card is not registered");
             }

@@ -2,7 +2,6 @@ package org.bank.authservice.common.loans.service.impl;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
-import org.bank.authservice.common.account.dto.AccountDTO;
 import org.bank.authservice.common.account.entity.Account;
 import org.bank.authservice.common.account.repository.AccountRepository;
 import org.bank.authservice.common.loans.dto.LoanDTO;
@@ -21,7 +20,6 @@ public class LoansServiceImpl implements LoansService {
 
     private final LoansFeignClient loansFeignClient;
     private final AccountRepository accountRepository;
-    private final ModelMapper modelMapper;
 
     @Override
     public ResponseEntity<?> createLoan(String email, LoanDTO loanDTO) {
@@ -41,10 +39,8 @@ public class LoansServiceImpl implements LoansService {
         Optional<Account> optionalAccount = accountRepository.findByEmail(email);
         if (optionalAccount.isPresent()) {
             try {
-                AccountDTO accountDTO = modelMapper.map(optionalAccount.get(), AccountDTO.class);
                 ResponseEntity<LoanDTO> loansResponse = loansFeignClient.getLoanByCardHolder(email);
-                accountDTO.setLoans(loansResponse.getBody());
-                return ResponseEntity.ok(accountDTO);
+                return ResponseEntity.ok(loansResponse.getBody());
             } catch (FeignException e) {
                 throw new GlobalExceptionHandler.ConflictException(e.getMessage());
             }
