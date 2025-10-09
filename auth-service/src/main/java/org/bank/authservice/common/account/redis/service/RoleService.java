@@ -1,4 +1,4 @@
-package org.bank.authservice.common.account.redis;
+package org.bank.authservice.common.account.redis.service;
 
 import org.bank.authservice.enums.Role;
 import org.bank.authservice.common.account.entity.Account;

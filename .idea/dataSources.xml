@@ -51,7 +51,7 @@
       <jdbc-url>jdbc:postgresql://host.docker.internal:5432/acc_db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="jdbc:postgresql://host.docker.internal:5434/loans_db [DEBUG]" group="​LoansServiceApplication" uuid="85123c7a-19a4-4e5c-80dc-c62bf2d62d05">
+    <data-source source="LOCAL" name="jdbc:postgresql://host.docker.internal:5434/loans_db [DEBUG]" group="​LoansServiceApplication" uuid="6f6d7c88-253e-4c38-b394-1414b7385e41">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>

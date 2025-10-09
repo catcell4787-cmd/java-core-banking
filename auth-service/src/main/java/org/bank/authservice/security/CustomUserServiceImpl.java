@@ -1,7 +1,7 @@
 package org.bank.authservice.security;
 
 import lombok.RequiredArgsConstructor;
-import org.bank.authservice.common.account.redis.RoleService;
+import org.bank.authservice.common.account.redis.service.RoleService;
 import org.bank.authservice.exception.GlobalExceptionHandler;
 import org.bank.authservice.common.account.entity.Account;
 import org.bank.authservice.common.account.repository.AccountRepository;

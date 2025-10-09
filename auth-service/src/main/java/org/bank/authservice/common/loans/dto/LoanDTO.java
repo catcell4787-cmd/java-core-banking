@@ -8,11 +8,10 @@ import java.time.LocalDate;
 public class LoanDTO {
 
     private String cardNumber;
+    private double currentBalance;
     private double amount;
     private double interestRate;
     private int termInMonths;
     private LocalDate issueDate;
     private LocalDate maturityDate;
-    private double currentBalance;
-
 }

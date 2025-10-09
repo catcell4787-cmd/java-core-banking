@@ -10,7 +10,8 @@ public class AccountDTO {
 
     private String email;
     private String role;
+    private boolean enabled;
     private CardDTO cards;
     private LoanDTO loans;
-    private boolean enabled;
+
 }

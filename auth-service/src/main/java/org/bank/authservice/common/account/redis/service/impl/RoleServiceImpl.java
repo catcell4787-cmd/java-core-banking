@@ -1,6 +1,7 @@
-package org.bank.authservice.common.account.redis;
+package org.bank.authservice.common.account.redis.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.bank.authservice.common.account.redis.service.RoleService;
 import org.bank.authservice.enums.Role;
 import org.bank.authservice.common.account.entity.Account;
 import org.bank.authservice.common.account.repository.AccountRepository;
@@ -38,15 +39,16 @@ public class RoleServiceImpl implements RoleService {
                 .match("*")
                 .count(1000)
                 .build(); // count определяет количество возвращаемых элементов за итерацию
-        Cursor<String> cursor = redisTemplate.scan(scanOptions); // начинаем перебор всех ключей
-        while(cursor.hasNext()) {
-            String key = cursor.next();
-            Object value = redisTemplate.opsForValue().get(key); // получаем значение ключа
-            if(value != null && value.toString().contains(role)) {
-                Optional<Account> accountOptional = accountRepository.findByEmail(key);
-                accountOptional.ifPresent(accounts::add);
+        try (Cursor<String> cursor = redisTemplate.scan(scanOptions)) {
+            while (cursor.hasNext()) {
+                String key = cursor.next();
+                Object value = redisTemplate.opsForValue().get(key); // получаем значение ключа
+                if (value != null && value.toString().contains(role)) {
+                    Optional<Account> accountOptional = accountRepository.findByEmail(key);
+                    accountOptional.ifPresent(accounts::add);
+                }
             }
-        }
+        } // начинаем перебор всех ключей
         return accounts;
     }
 

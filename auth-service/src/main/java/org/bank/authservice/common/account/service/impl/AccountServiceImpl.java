@@ -3,7 +3,7 @@ package org.bank.authservice.common.account.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bank.authservice.enums.Role;
-import org.bank.authservice.common.account.redis.RoleService;
+import org.bank.authservice.common.account.redis.service.RoleService;
 import org.bank.authservice.exception.GlobalExceptionHandler;
 import org.bank.authservice.common.account.dto.AccountCredentialsDTO;
 import org.bank.authservice.common.account.dto.AccountDTO;
