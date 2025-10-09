@@ -1,10 +1,10 @@
 package org.bank.authservice.security;
 
 import lombok.RequiredArgsConstructor;
+import org.bank.authservice.common.account.redis.RoleService;
 import org.bank.authservice.exception.GlobalExceptionHandler;
-import org.bank.authservice.model.entity.Account;
-import org.bank.authservice.repository.AccountRepository;
-import org.bank.authservice.service.RoleService;
+import org.bank.authservice.common.account.entity.Account;
+import org.bank.authservice.common.account.repository.AccountRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

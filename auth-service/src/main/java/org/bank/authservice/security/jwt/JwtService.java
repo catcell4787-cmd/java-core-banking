@@ -5,7 +5,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.bank.authservice.exception.GlobalExceptionHandler;
-import org.bank.authservice.model.dto.AuthTokenDto;
+import org.bank.authservice.common.account.dto.AuthTokenDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,15 +21,15 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    public AuthTokenDto generateAuthToken(String email) {
-        AuthTokenDto jwtDto = new AuthTokenDto();
+    public AuthTokenDTO generateAuthToken(String email) {
+        AuthTokenDTO jwtDto = new AuthTokenDTO();
         jwtDto.setToken(generateJwtToken(email));
         jwtDto.setRefreshToken(generateRefreshToken(email));
         return jwtDto;
     }
 
     public String getRefreshToken(String email) {
-        AuthTokenDto jwtDto = new AuthTokenDto();
+        AuthTokenDTO jwtDto = new AuthTokenDTO();
         jwtDto.setRefreshToken(generateRefreshToken(email));
         return generateRefreshToken(email);
     }

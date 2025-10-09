@@ -43,5 +43,13 @@
       <jdbc-url>jdbc:postgresql://host.docker.internal:5432/acc_db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="jdbc:postgresql://host.docker.internal:5432/acc_db [DEBUG]" group="​AuthServiceApplication" uuid="81d454e4-46c0-4790-a243-f88efea794ff">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://host.docker.internal:5432/acc_db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

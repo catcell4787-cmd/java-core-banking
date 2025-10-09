@@ -109,6 +109,26 @@ services:
     networks:
       - postgres
 
+  db_loans:
+    image: postgres:latest
+    container_name: loans_db
+    environment:
+      POSTGRES_DB: loans_db
+      POSTGRES_USER: acc
+      POSTGRES_PASSWORD: acc
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U acc -d acc" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    volumes:
+      - data3:/var/lib/postgresql/data
+    networks:
+      - postgres
+
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: pgadmin_acc_db
@@ -182,3 +202,4 @@ volumes:
     driver: local
   data1:
   data2:
+  data3:
