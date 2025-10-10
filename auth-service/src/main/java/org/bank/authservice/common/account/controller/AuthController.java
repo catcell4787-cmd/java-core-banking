@@ -44,4 +44,9 @@ class AuthController {
         accountService.deleteAccount(email);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello!";
+    }
 }

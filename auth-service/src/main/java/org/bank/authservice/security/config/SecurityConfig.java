@@ -26,7 +26,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                                        .requestMatchers("/auth/register", "/auth/login").permitAll()
+                                        .requestMatchers("/auth/register", "/auth/login", "/auth/hello").permitAll()
                                         .requestMatchers("/auth/{email}").hasAnyAuthority("ADMIN", "MANAGER")
                                         .requestMatchers("/cards/{email}/registerCard", "/cards/{email}/getCards").hasAnyAuthority("CLIENT", "MANAGER")
                                         .requestMatchers("/loans/{email}/createLoan", "/loans/{email}/getLoans").hasAnyAuthority("CLIENT", "MANAGER")
@@ -37,7 +37,9 @@ public class SecurityConfig {
                                         .requestMatchers("/managers/{email}", "/clients/{email}").hasAnyAuthority("ADMIN", "MANAGER")
                                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.defaultSuccessUrl("/auth/hello"))
+                .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer.logoutUrl("/logout"));
         return http.build();
     }
 }
