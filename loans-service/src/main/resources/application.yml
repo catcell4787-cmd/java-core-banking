@@ -6,9 +6,9 @@ spring:
   main:
     banner-mode: off
   config:
-    import: "optional:configserver:http://192.168.50.210:8888"
+    import: "optional:configserver:http://localhost:8888"
   kafka:
-    bootstrap-servers: 192.168.50.210:29092
+    bootstrap-servers: localhost:29092
     consumer:
       enable-auto-commit: false
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -22,6 +22,6 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://host.docker.internal:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
 logging:
   config: classpath:logback-spring.xml

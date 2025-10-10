@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -28,8 +29,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Object getRoleForUser(String username) {
-        return redisTemplate.opsForValue().get(username);
+    public String getRoleForUser(String username) {
+        return Objects.requireNonNull(redisTemplate.opsForValue().get(username)).toString();
     }
 
     @Override

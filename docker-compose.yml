@@ -1,6 +1,4 @@
-version: '3'
 services:
-
   discovery-service:
     container_name: discovery-service
     build:
@@ -11,7 +9,6 @@ services:
     restart: always
     networks:
       - jcb
-
 #  gateway-service:
 #    container_name: gateway-service
 #    build:
@@ -36,7 +33,6 @@ services:
 #    networks:
 #      - jcb
 #      - redis-network
-
   redis:
     image: redis:alpine
     container_name: redis
@@ -70,7 +66,7 @@ services:
       - redis
 
   db:
-    image: postgres:latest
+    image: postgres:12-alpine
     container_name: acc_db
     environment:
       POSTGRES_DB: acc_db
@@ -90,7 +86,7 @@ services:
       - postgres
 
   db_cards:
-    image: postgres:latest
+    image: postgres:12-alpine
     container_name: cards_db
     environment:
       POSTGRES_DB: cards_db
@@ -110,7 +106,7 @@ services:
       - postgres
 
   db_loans:
-    image: postgres:latest
+    image: postgres:12-alpine
     container_name: loans_db
     environment:
       POSTGRES_DB: loans_db
@@ -143,47 +139,47 @@ services:
     networks:
       - postgres
 
-  zookeeper:
-    container_name: zookeeper
-    image: confluentinc/cp-zookeeper:7.4.4
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - "22181:2181"
-    networks:
-      - kafka-network
-
-  kafka:
-    container_name: kafka
-    image: confluentinc/cp-kafka:7.4.4
-    depends_on:
-      - zookeeper
-    ports:
-      - "29092:29092"
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    networks:
-      - kafka-network
-
-  kafdrop:
-    container_name: kafdrop
-    image: obsidiandynamics/kafdrop
-    restart: always
-    ports:
-      - "9000:9000"
-    environment:
-      KAFKA_BROKERCONNECT: kafka:9092
-      SERVER_SERVLET_CONTEXT_PATH: /
-    depends_on:
-      - kafka
-    networks:
-      - kafka-network
+#  zookeeper:
+#    container_name: zookeeper
+#    image: confluentinc/cp-zookeeper:7.4.4
+#    environment:
+#      ZOOKEEPER_CLIENT_PORT: 2181
+#      ZOOKEEPER_TICK_TIME: 2000
+#    ports:
+#      - "22181:2181"
+#    networks:
+#      - kafka-network
+#
+#  kafka:
+#    container_name: kafka
+#    image: confluentinc/cp-kafka:7.4.4
+#    depends_on:
+#      - zookeeper
+#    ports:
+#      - "29092:29092"
+#    environment:
+#      KAFKA_BROKER_ID: 1
+#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+#      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+#    networks:
+#      - kafka-network
+#
+#  kafdrop:
+#    container_name: kafdrop
+#    image: obsidiandynamics/kafdrop
+#    restart: always
+#    ports:
+#      - "9000:9000"
+#    environment:
+#      KAFKA_BROKERCONNECT: kafka:9092
+#      SERVER_SERVLET_CONTEXT_PATH: /
+#    depends_on:
+#      - kafka
+#    networks:
+#      - kafka-network
 
 networks:
   postgres:

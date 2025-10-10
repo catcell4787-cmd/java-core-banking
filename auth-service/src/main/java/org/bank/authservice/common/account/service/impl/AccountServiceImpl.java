@@ -93,7 +93,8 @@ public class AccountServiceImpl implements AccountService {
             }
             if (passwordEncoder.matches(accountCredentialsDto.getPassword(), account.getPassword())) {
 //                log.info("tokens: {}", jwtService.generateAuthToken(account.getEmail()));
-                log.info("token : {}", jwtService.getRefreshToken(account.getEmail()));
+                String token = jwtService.getRefreshToken(account.getEmail());
+                System.out.println(token);
                 return ResponseEntity.ok("Logged in successfully");
             } else {
                 throw new GlobalExceptionHandler.AuthenticationException("Invalid password");

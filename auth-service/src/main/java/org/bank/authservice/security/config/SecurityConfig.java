@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.bank.authservice.security.jwt.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -37,7 +36,6 @@ public class SecurityConfig {
                                         .requestMatchers("/managers/list", "/managers/{email}/updateStatus", "/managers/hire").hasAuthority("ADMIN")
                                         .requestMatchers("/managers/{email}", "/clients/{email}").hasAnyAuthority("ADMIN", "MANAGER")
                                         .anyRequest().authenticated())
-                .formLogin(Customizer.withDefaults())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();

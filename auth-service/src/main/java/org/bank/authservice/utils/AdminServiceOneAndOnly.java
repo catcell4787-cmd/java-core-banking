@@ -3,7 +3,9 @@ package org.bank.authservice.utils;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.bank.authservice.common.account.entity.Account;
+import org.bank.authservice.common.account.redis.service.RoleService;
 import org.bank.authservice.common.account.repository.AccountRepository;
+import org.bank.authservice.enums.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ public class AdminServiceOneAndOnly {
 
     private final PasswordEncoder passwordEncoder;
 
-//    private final RoleService roleService;
+    private final RoleService roleService;
 
     @PostConstruct
     public void createAdmin() {
@@ -31,7 +33,7 @@ public class AdminServiceOneAndOnly {
             account.setEmail(adminEmail);
             account.setPassword(passwordEncoder.encode(adminPassword));
             account.setEnabled(true);
-//            roleService.saveRole(account.getEmail(), Role.ADMIN);
+            roleService.saveRole(account.getEmail(), Role.ADMIN);
             accountRepository.save(account);
         }
     }
