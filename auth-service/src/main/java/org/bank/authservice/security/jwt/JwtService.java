@@ -5,27 +5,33 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.bank.authservice.exception.GlobalExceptionHandler;
-import org.bank.authservice.model.dto.AuthTokenDto;
+import org.bank.authservice.common.account.dto.AuthTokenDTO;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
-@Component
+@Service
 @Slf4j
 public class JwtService {
 
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    public AuthTokenDto generateAuthToken(String email) {
-        AuthTokenDto jwtDto = new AuthTokenDto();
+    public AuthTokenDTO generateAuthToken(String email) {
+        AuthTokenDTO jwtDto = new AuthTokenDTO();
         jwtDto.setToken(generateJwtToken(email));
         jwtDto.setRefreshToken(generateRefreshToken(email));
         return jwtDto;
+    }
+
+    public String getRefreshToken(String email) {
+        AuthTokenDTO jwtDto = new AuthTokenDTO();
+        jwtDto.setRefreshToken(generateRefreshToken(email));
+        return generateRefreshToken(email);
     }
 
     private String generateJwtToken(String email) {
@@ -68,9 +74,8 @@ public class JwtService {
                     .parseSignedClaims(token)
                     .getPayload();
             return true;
-        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SecurityException |
-                 io.jsonwebtoken.security.SignatureException expEx) {
-            throw new GlobalExceptionHandler.AuthenticationException("Invalid token");
+        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SecurityException expEx) {
+            throw new GlobalExceptionHandler.AuthenticationException(expEx.getMessage());
         }
     }
 }

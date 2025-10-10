@@ -19,9 +19,9 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
+
     private final JwtService jwtService;
     private final CustomUserServiceImpl customUserService;
-
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -49,6 +49,4 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         return null;
     }
-
-
 }

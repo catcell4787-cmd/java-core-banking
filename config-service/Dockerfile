@@ -8,7 +8,7 @@ RUN chmod 600 /root/.ssh/id_rsa
 
 # Устанавливаем необходимые зависимости
 RUN apt-get update && \
-    apt-get install -y wget curl git openssh-client && \
+    apt-get install -y wget curl git openssh-feign && \
     rm -rf /var/lib/apt/lists/*
 ARG JAR_FILE="config-service/build/libs/config-service.jar"
 COPY ${JAR_FILE} app.jar

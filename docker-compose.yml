@@ -12,30 +12,30 @@ services:
     networks:
       - jcb
 
-  gateway-service:
-    container_name: gateway-service
-    build:
-      context: .
-      dockerfile: gateway-service/Dockerfile
-    ports:
-      - "8080:8080"
-    restart: always
-    networks:
-      - jcb
-    depends_on:
-      - discovery-service
-
-  auth-service:
-    container_name: auth-service
-    build:
-      context: .
-      dockerfile: auth-service/Dockerfile
-    ports:
-      - "8081:8081"
-    restart: always
-    networks:
-      - jcb
-      - redis-network
+#  gateway-service:
+#    container_name: gateway-service
+#    build:
+#      context: .
+#      dockerfile: gateway-service/Dockerfile
+#    ports:
+#      - "8080:8080"
+#    restart: always
+#    networks:
+#      - jcb
+#    depends_on:
+#      - discovery-service
+#
+#  auth-service:
+#    container_name: auth-service
+#    build:
+#      context: .
+#      dockerfile: auth-service/Dockerfile
+#    ports:
+#      - "8081:8081"
+#    restart: always
+#    networks:
+#      - jcb
+#      - redis-network
 
   redis:
     image: redis:alpine
@@ -106,6 +106,26 @@ services:
     restart: unless-stopped
     volumes:
       - data2:/var/lib/postgresql/data
+    networks:
+      - postgres
+
+  db_loans:
+    image: postgres:latest
+    container_name: loans_db
+    environment:
+      POSTGRES_DB: loans_db
+      POSTGRES_USER: acc
+      POSTGRES_PASSWORD: acc
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U acc -d acc" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    volumes:
+      - data3:/var/lib/postgresql/data
     networks:
       - postgres
 
@@ -182,3 +202,4 @@ volumes:
     driver: local
   data1:
   data2:
+  data3:

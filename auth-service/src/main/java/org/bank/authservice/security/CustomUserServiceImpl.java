@@ -1,9 +1,10 @@
 package org.bank.authservice.security;
 
 import lombok.RequiredArgsConstructor;
-import org.bank.authservice.model.entity.Account;
-import org.bank.authservice.repository.AccountRepository;
-import org.bank.authservice.service.RoleService;
+import org.bank.authservice.common.account.redis.service.RoleService;
+import org.bank.authservice.exception.GlobalExceptionHandler;
+import org.bank.authservice.common.account.entity.Account;
+import org.bank.authservice.common.account.repository.AccountRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +30,9 @@ public class CustomUserServiceImpl implements UserDetailsService {
         Optional<Account> optionalAccount = accountRepository.findByEmail(username);
         if  (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
+            if (!account.isEnabled()) {
+                throw new GlobalExceptionHandler.AccountStatusException("Account is not enabled");
+            }
             String role = roleService.getRoleForUser(username).toString();
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
             authorities.add(new SimpleGrantedAuthority(role));
