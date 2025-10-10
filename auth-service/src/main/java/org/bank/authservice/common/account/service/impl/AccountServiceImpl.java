@@ -64,9 +64,11 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> optionalAccount = accountRepository.findByEmail(email);
         if (optionalAccount.isPresent()) {
             try {
-                FullDataAccountDTO fullDataAccountDTO = modelMapper.map(optionalAccount.get(), FullDataAccountDTO.class);
+                Account account = optionalAccount.get();
+                FullDataAccountDTO fullDataAccountDTO = modelMapper.map(account, FullDataAccountDTO.class);
                 ResponseEntity<CardDTO> cardsResponse = cardsFeignClient.getCardByCardHolder(email);
                 ResponseEntity<LoanDTO> loansResponse = loansFeignClient.getLoanByCardHolder(email);
+                fullDataAccountDTO.setRole(roleService.getRoleForUser(email));
                 fullDataAccountDTO.setCards(cardsResponse.getBody());
                 fullDataAccountDTO.setLoans(loansResponse.getBody());
                 return ResponseEntity.ok(fullDataAccountDTO);

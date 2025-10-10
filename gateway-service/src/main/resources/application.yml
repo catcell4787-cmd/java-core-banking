@@ -16,14 +16,31 @@ spring:
               uri: lb://AUTH-SERVICE
               predicates:
                 - Path=/**
+              filters:
+                - CircuitBreaker=defaultCircuitBreakerConfig
             - id: CARDS-SERVICE
               uri: lb://CARDS-SERVICE
               predicates:
                 - Path=/**
+              filters:
+                - CircuitBreaker=defaultCircuitBreakerConfig
             - id: LOANS-SERVICE
               uri: lb://LOANS-SERVICE
               predicates:
                 - Path=/**
+              filters:
+                - CircuitBreaker=defaultCircuitBreakerConfig
+resilience4j:
+  circuitbreaker:
+    configs:
+      defaultCircuitBreakerConfig:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: PT10S # Длительность открытого состояния в секундах
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        permittedNumberOfCallsInHalfOpenState: 3
 eureka:
   client:
     register-with-eureka: true
