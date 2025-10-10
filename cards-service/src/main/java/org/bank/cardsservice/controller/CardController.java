@@ -7,17 +7,17 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/cards")
+@RequestMapping("/clients")
 public class CardController {
 
     private final CardService cardService;
 
-    @GetMapping("/{email}/getCards")
+    @GetMapping("/{email}/cards/getCards")
     public CardDto getCards(@PathVariable String email) {
         return cardService.getCard(email);
     }
 
-    @PostMapping("/{email}/registerCard")
+    @PostMapping("/{email}/cards/registerCard")
     public CardDto registerCard(@PathVariable String email) {
         return cardService.registerCard(email);
     }

@@ -2,11 +2,11 @@ package org.bank.authservice.common.account.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.bank.authservice.enums.Role;
 import org.bank.authservice.common.account.dto.AccountCredentialsDTO;
 import org.bank.authservice.common.account.dto.AccountDTO;
 import org.bank.authservice.common.account.entity.Account;
 import org.bank.authservice.common.account.service.AccountService;
+import org.bank.authservice.enums.Role;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +26,7 @@ public class ClientsController {
 
     @GetMapping("/{email}")
     public ResponseEntity<?> getClient(@Valid @PathVariable String email) {
-        return ResponseEntity.ok(accountService.findByEmail(email));
+        return ResponseEntity.ok(accountService.getFullAccountData(email));
     }
 
     @PostMapping("/addClient")

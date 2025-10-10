@@ -8,17 +8,17 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/loans")
+@RequestMapping("/clients")
 public class LoansController {
 
     private final LoansService loansService;
 
-    @PostMapping("/{email}/createLoan")
+    @PostMapping("/{email}/loans/createLoan")
     public ResponseEntity<?> createLoan(@PathVariable String email, @RequestBody LoanDTO loanDTO) {
         return ResponseEntity.ok(loansService.createLoan(email, loanDTO));
     }
 
-    @GetMapping("/{email}/getLoans")
+    @GetMapping("/{email}/loans/getLoans")
     public ResponseEntity<?> getLoans(@PathVariable String email) {
         return ResponseEntity.ok(loansService.getLoan(email));
     }

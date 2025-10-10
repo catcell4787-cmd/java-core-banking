@@ -28,18 +28,18 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                                         .requestMatchers("/auth/register", "/auth/login", "/auth/hello").permitAll()
                                         .requestMatchers("/auth/{email}").hasAnyAuthority("ADMIN", "MANAGER")
-                                        .requestMatchers("/cards/{email}/registerCard", "/cards/{email}/getCards").hasAnyAuthority("CLIENT", "MANAGER")
-                                        .requestMatchers("/loans/{email}/createLoan", "/loans/{email}/getLoans").hasAnyAuthority("CLIENT", "MANAGER")
+                        .requestMatchers("/clients/{email}/cards/registerCard", "/clients/{email}/cards/getCards").hasAnyAuthority("CLIENT", "MANAGER")
+                        .requestMatchers("/clients/{email}/loans/createLoan", "/clients/{email}/loans/getLoans").hasAnyAuthority("CLIENT", "MANAGER")
                                         .requestMatchers("/auth/delete/{email}").hasAuthority("ADMIN")
                                         .requestMatchers("/clients/list").hasAnyAuthority("ADMIN", "MANAGER")
-                                        .requestMatchers("/clients/{email}/updateStatus").hasAnyAuthority("ADMIN", "MANAGER")
+                        .requestMatchers("/clients/{email}", "/clients/{email}/updateStatus").hasAnyAuthority("ADMIN", "MANAGER")
                                         .requestMatchers("/managers/list", "/managers/{email}/updateStatus", "/managers/hire").hasAuthority("ADMIN")
                                         .requestMatchers("/managers/{email}", "/clients/{email}").hasAnyAuthority("ADMIN", "MANAGER")
                                         .anyRequest().authenticated())
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.defaultSuccessUrl("/auth/hello"))
-                .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer.logoutUrl("/logout"));
+                .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer.logoutUrl("/logout"))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
 }

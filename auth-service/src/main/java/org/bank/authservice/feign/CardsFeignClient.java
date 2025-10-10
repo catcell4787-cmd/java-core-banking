@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-@FeignClient(name = "cards-service", url = "http://localhost:8082")
+@FeignClient(name = "cards-service")
 public interface CardsFeignClient {
 
-    @GetMapping("/cards/{email}/getCards")
+    @GetMapping("clients/{email}/cards/getCards")
     ResponseEntity<CardDTO> getCardByCardHolder(@PathVariable String email);
 
-    @PostMapping("/cards/{email}/registerCard")
+    @PostMapping("clients/{email}/cards/registerCard")
     ResponseEntity<CardDTO> registerCard(@PathVariable String email);
 
 }

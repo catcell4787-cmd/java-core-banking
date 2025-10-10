@@ -1,17 +1,22 @@
 package org.bank.authservice.common.account.service.impl;
 
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bank.authservice.common.account.dto.FullDataAccountDTO;
-import org.bank.authservice.enums.Role;
-import org.bank.authservice.common.account.redis.service.RoleService;
-import org.bank.authservice.exception.GlobalExceptionHandler;
 import org.bank.authservice.common.account.dto.AccountCredentialsDTO;
 import org.bank.authservice.common.account.dto.AccountDTO;
+import org.bank.authservice.common.account.dto.FullDataAccountDTO;
 import org.bank.authservice.common.account.entity.Account;
+import org.bank.authservice.common.account.redis.service.RoleService;
 import org.bank.authservice.common.account.repository.AccountRepository;
-import org.bank.authservice.security.jwt.JwtService;
 import org.bank.authservice.common.account.service.AccountService;
+import org.bank.authservice.common.cards.dto.CardDTO;
+import org.bank.authservice.common.loans.dto.LoanDTO;
+import org.bank.authservice.enums.Role;
+import org.bank.authservice.exception.GlobalExceptionHandler;
+import org.bank.authservice.feign.CardsFeignClient;
+import org.bank.authservice.feign.LoansFeignClient;
+import org.bank.authservice.security.jwt.JwtService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +35,8 @@ public class AccountServiceImpl implements AccountService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
+    private final CardsFeignClient cardsFeignClient;
+    private final LoansFeignClient loansFeignClient;
 
     @Override
     public ResponseEntity<?> register(AccountCredentialsDTO accountCredentialsDto, Role role, boolean status) {
@@ -45,11 +52,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Account> findAll() {
-        return accountRepository.findAll();
-    }
-
-    @Override
     public FullDataAccountDTO findByEmail(String email) {
         Optional<Account> optionalAccount = accountRepository.findByEmail(email);
         if (optionalAccount.isPresent()) {
@@ -58,16 +60,26 @@ public class AccountServiceImpl implements AccountService {
         throw new GlobalExceptionHandler.ResourceNotFoundException("Account with email " + email + " not found");
     }
 
-    @Override
-    public List<Account> findByRole(String role) {
-        return roleService.findByRole(role);
+    public ResponseEntity<?> getFullAccountData(String email) {
+        Optional<Account> optionalAccount = accountRepository.findByEmail(email);
+        if (optionalAccount.isPresent()) {
+            try {
+                FullDataAccountDTO fullDataAccountDTO = modelMapper.map(optionalAccount.get(), FullDataAccountDTO.class);
+                ResponseEntity<CardDTO> cardsResponse = cardsFeignClient.getCardByCardHolder(email);
+                ResponseEntity<LoanDTO> loansResponse = loansFeignClient.getLoanByCardHolder(email);
+                fullDataAccountDTO.setCards(cardsResponse.getBody());
+                fullDataAccountDTO.setLoans(loansResponse.getBody());
+                return ResponseEntity.ok(fullDataAccountDTO);
+            } catch (FeignException e) {
+                throw new GlobalExceptionHandler.ResourceNotFoundException("Card is not registered");
+            }
+        }
+        throw new GlobalExceptionHandler.ResourceNotFoundException("Account with email " + email + " not found");
     }
 
     @Override
-    public void deleteAccount(String email) {
-        Account account = accountRepository.findByEmail(email).orElseThrow();
-        accountRepository.delete(account);
-        roleService.deleteRole(email);
+    public List<Account> findByRole(String role) {
+        return roleService.findByRole(role);
     }
 
     @Override

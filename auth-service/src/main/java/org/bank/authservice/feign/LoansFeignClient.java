@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "loans-service", url = "http://localhost:8083")
+@FeignClient(name = "loans-service")
 public interface LoansFeignClient {
 
     @PostMapping("/loans/{email}/createLoan")
