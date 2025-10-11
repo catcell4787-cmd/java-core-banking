@@ -26,20 +26,22 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                                        .requestMatchers("/auth/register", "/auth/login", "/auth/hello").permitAll()
-                                        .requestMatchers("/auth/{email}").hasAnyAuthority("ADMIN", "MANAGER")
+                        .requestMatchers("/auth/register", "/auth/login", "/auth/hello").permitAll()
+                        .requestMatchers("/auth/{email}").hasAnyAuthority("ADMIN", "MANAGER")
                         .requestMatchers("/clients/{email}/cards/registerCard", "/clients/{email}/cards/getCards").hasAnyAuthority("CLIENT", "MANAGER")
                         .requestMatchers("/clients/{email}/loans/createLoan", "/clients/{email}/loans/getLoans").hasAnyAuthority("CLIENT", "MANAGER")
-                                        .requestMatchers("/auth/delete/{email}").hasAuthority("ADMIN")
-                                        .requestMatchers("/clients/list").hasAnyAuthority("ADMIN", "MANAGER")
+                        .requestMatchers("/clients/list").hasAnyAuthority("ADMIN", "MANAGER")
                         .requestMatchers("/clients/{email}", "/clients/{email}/updateStatus").hasAnyAuthority("ADMIN", "MANAGER")
-                                        .requestMatchers("/managers/list", "/managers/{email}/updateStatus", "/managers/hire").hasAuthority("ADMIN")
-                                        .requestMatchers("/managers/{email}", "/clients/{email}").hasAnyAuthority("ADMIN", "MANAGER")
-                                        .anyRequest().authenticated())
-                .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.defaultSuccessUrl("/auth/hello"))
-                .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer.logoutUrl("/logout"))
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        .requestMatchers("/managers/**").hasAuthority("ADMIN")
+                        .requestMatchers("/managers/{email}").hasAnyAuthority("ADMIN", "MANAGER")
+                        .anyRequest().authenticated())
+                        .formLogin(config ->
+                                config
+                                        .loginPage("/auth/login")
+                                        .defaultSuccessUrl("/auth/hello", true))
+                                        .logout(logout -> logout.logoutUrl("/logout"))
+                                        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                                        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
 }
